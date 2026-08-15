@@ -1,4 +1,4 @@
-const SAVE_KEY="parkEmpireV72";
+const SAVE_KEY="parkEmpireV73";
 const money=n=>new Intl.NumberFormat("en-GB",{style:"currency",currency:"GBP",maximumFractionDigits:0}).format(Math.round(n||0));
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 const rand=(a,b)=>Math.random()*(b-a)+a;
@@ -58,7 +58,7 @@ function blankLive(){
 
 function newState(){
   return{
-    version:72,day:1,cash:1500000,debt:0,negativeDays:0,parkOpen:false,
+    version:73,day:1,cash:1500000,debt:0,negativeDays:0,parkOpen:false,
     rating:3.2,reputation:50,satisfaction:72,
     ticketPrice:32,parkingPrice:7,fastTrackPrice:0,
     rides:[{uid:1,id:"carousel",condition:100,daysLeft:0,down:false,ageDays:120}],
@@ -83,7 +83,7 @@ let timer=null;
 function load(){
   try{
     const s=JSON.parse(localStorage.getItem(SAVE_KEY));
-    if(!s||s.version!==72)return null;
+    if(!s||s.version!==73)return null;
     s.live=blankLive();s.parkOpen=false;
     return s;
   }catch{return null;}
@@ -625,18 +625,18 @@ function render(){
     const r=rideById(o.id),s=latestRideStat(o.uid);
     const util=o.daysLeft>0?0:Math.min(100,Math.round(s.riders/Math.max(1,r.capacity*9)*100));
     const badge=o.daysLeft>0?`<span class="asset-badge building">${o.daysLeft} DAYS</span>`:o.down?`<span class="asset-badge down">DOWN</span>`:`<span class="asset-badge">OWNED</span>`;
-    return`<div class="performance-card"><div class="performance-head"><div><h3>${r.name}</h3><small>${r.type}</small></div>${badge}</div><div class="perf-grid"><div><span>Riders today</span><strong>${s.riders.toLocaleString()}</strong></div><div><span>Utilisation</span><strong>${util}%</strong></div><div><span>Appeal</span><strong>+${r.appeal}</strong></div><div><span>Daily upkeep</span><strong>${money(r.upkeep)}</strong></div><div><span>Age</span><strong>${o.ageDays||0} days</strong></div><div><span>Resale value</span><strong>${money(rideSaleValue(o))}</strong></div></div><div class="condition-wrap"><div class="condition-copy"><span>Condition</span><span>${Math.round(o.condition)}%</span></div><div class="condition-track"><div class="condition-fill" style="width:${o.condition}%"></div></div></div>${o.daysLeft<=0&&(o.condition<99||o.down)?`<button class="ghost full" onclick="repairRide(${o.uid})">Repair attraction</button>`:""}<button class="sell-btn full" onclick="sellRide(${o.uid})">Sell attraction Â· ${money(rideSaleValue(o))}</button></div>`;
+    return`<div class="performance-card"><div class="performance-head"><div><h3>${r.name}</h3><small>${r.type}</small></div>${badge}</div><div class="perf-grid"><div><span>Riders today</span><strong>${s.riders.toLocaleString()}</strong></div><div><span>Utilisation</span><strong>${util}%</strong></div><div><span>Appeal</span><strong>+${r.appeal}</strong></div><div><span>Daily upkeep</span><strong>${money(r.upkeep)}</strong></div><div><span>Age</span><strong>${o.ageDays||0} days</strong></div><div><span>Resale value</span><strong>${money(rideSaleValue(o))}</strong></div></div><div class="condition-wrap"><div class="condition-copy"><span>Condition</span><span>${Math.round(o.condition)}%</span></div><div class="condition-track"><div class="condition-fill" style="width:${o.condition}%"></div></div></div>${o.daysLeft<=0&&(o.condition<99||o.down)?`<button class="ghost full" onclick="repairRide(${o.uid})">Repair attraction</button>`:""}<button class="sell-btn full" onclick="sellRide(${o.uid})">Sell attraction - ${money(rideSaleValue(o))}</button></div>`;
   }).join("");
 
   document.getElementById("attractionShop").innerHTML=rides.map(r=>{
     const same=state.rides.filter(x=>x.id===r.id).length;
-    return`<div class="shop-card"><h3>${r.name}</h3><div class="type">${r.type}</div><p>${r.desc}</p><div class="stat-grid"><div><span>Build cost</span><strong>${money(r.cost)}</strong></div><div><span>Construction</span><strong>${r.buildDays} days</strong></div><div><span>Daily upkeep</span><strong>${money(r.upkeep)}</strong></div><div><span>Capacity</span><strong>${r.capacity}/hr</strong></div></div><div class="impact">Estimated demand gain: +${rideImpact(r).toLocaleString()} guests/day${same?` Â· duplicate penalty applies (${same} already owned)`:""}</div><button class="primary full" onclick="buyRide('${r.id}')">Build ${r.name}</button></div>`;
+    return`<div class="shop-card"><h3>${r.name}</h3><div class="type">${r.type}</div><p>${r.desc}</p><div class="stat-grid"><div><span>Build cost</span><strong>${money(r.cost)}</strong></div><div><span>Construction</span><strong>${r.buildDays} days</strong></div><div><span>Daily upkeep</span><strong>${money(r.upkeep)}</strong></div><div><span>Capacity</span><strong>${r.capacity}/hr</strong></div></div><div class="impact">Estimated demand gain: +${rideImpact(r).toLocaleString()} guests/day${same?` - duplicate penalty applies (${same} already owned)`:""}</div><button class="primary full" onclick="buyRide('${r.id}')">Build ${r.name}</button></div>`;
   }).join("");
 
   document.getElementById("ownedOutlets").innerHTML=state.outlets.map(o=>{
     const x=outletById(o.id),s=latestOutletStat(o.uid),util=o.daysLeft>0?0:Math.min(100,Math.round(s.customers/Math.max(1,x.capacity)*100));
     const badge=o.daysLeft>0?`<span class="asset-badge building">${o.daysLeft} DAYS</span>`:`<span class="asset-badge">OWNED</span>`;
-    return`<div class="performance-card"><div class="performance-head"><div><h3>${x.name}</h3><small>${x.type}</small></div>${badge}</div><div class="perf-grid"><div><span>Customers</span><strong>${s.customers.toLocaleString()}</strong></div><div><span>Utilisation</span><strong>${util}%</strong></div><div><span>Sales</span><strong>${money(s.revenue)}</strong></div><div><span>Gross profit</span><strong>${money(s.revenue*x.margin)}</strong></div><div><span>Age</span><strong>${o.ageDays||0} days</strong></div><div><span>Resale value</span><strong>${money(outletSaleValue(o))}</strong></div></div><button class="sell-btn full" onclick="sellOutlet(${o.uid})">Sell asset Â· ${money(outletSaleValue(o))}</button></div>`;
+    return`<div class="performance-card"><div class="performance-head"><div><h3>${x.name}</h3><small>${x.type}</small></div>${badge}</div><div class="perf-grid"><div><span>Customers</span><strong>${s.customers.toLocaleString()}</strong></div><div><span>Utilisation</span><strong>${util}%</strong></div><div><span>Sales</span><strong>${money(s.revenue)}</strong></div><div><span>Gross profit</span><strong>${money(s.revenue*x.margin)}</strong></div><div><span>Age</span><strong>${o.ageDays||0} days</strong></div><div><span>Resale value</span><strong>${money(outletSaleValue(o))}</strong></div></div><button class="sell-btn full" onclick="sellOutlet(${o.uid})">Sell asset - ${money(outletSaleValue(o))}</button></div>`;
   }).join("");
 
   document.getElementById("outletShop").innerHTML=outlets.map(o=>`<div class="shop-card"><h3>${o.name}</h3><div class="type">${o.type}</div><p>${o.desc}</p><div class="stat-grid"><div><span>Purchase cost</span><strong>${money(o.cost)}</strong></div><div><span>Fit-out</span><strong>${o.buildDays} days</strong></div><div><span>Spend / customer</span><strong>${money(o.spend)}</strong></div><div><span>Gross margin</span><strong>${Math.round(o.margin*100)}%</strong></div></div><div class="impact">Permanent asset. No sales until fit-out completes.</div><button class="primary full" onclick="buyOutlet('${o.id}')">Buy ${o.name}</button></div>`).join("");
