@@ -1,202 +1,313 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Park Empire — Business Tycoon</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07111f">
+  <title>Park Empire</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="app">
-    <header class="topbar">
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">PE</div>
       <div>
         <h1>Park Empire</h1>
-        <p class="subtitle">Theme Park Business Tycoon</p>
+        <p>Theme Park Business Tycoon</p>
       </div>
-      <div class="top-actions">
-        <button id="saveBtn" class="ghost">Save</button>
-        <button id="resetBtn" class="danger">New Game</button>
-      </div>
-    </header>
+    </div>
+    <div class="top-actions">
+      <button id="saveBtn" class="icon-btn">Save</button>
+      <button id="resetBtn" class="icon-btn danger-soft">New</button>
+    </div>
+  </header>
 
-    <section class="hero-panel">
-      <div class="kpi">
-        <span>Cash</span>
-        <strong id="cashKpi">£0</strong>
+  <section class="progress-strip">
+    <div class="level-badge">
+      <span>LEVEL</span>
+      <strong id="levelNumber">1</strong>
+    </div>
+    <div class="level-progress">
+      <div class="level-copy">
+        <strong id="levelName">Local Attraction</strong>
+        <span id="xpText">0 / 500 XP</span>
       </div>
-      <div class="kpi">
-        <span>Park Value</span>
-        <strong id="valueKpi">£0</strong>
+      <div class="progress-track"><div id="xpBar" class="progress-fill"></div></div>
+    </div>
+    <button id="objectivesJump" class="objective-pill">
+      <span>Objectives</span>
+      <strong id="objectiveCount">0/3</strong>
+    </button>
+  </section>
+
+  <section class="hero-panel">
+    <div class="kpi">
+      <span>Cash</span>
+      <strong id="cashKpi">Â£0</strong>
+      <small id="cashDelta">No trading yet</small>
+    </div>
+    <div class="kpi">
+      <span>Park Value</span>
+      <strong id="valueKpi">Â£0</strong>
+      <small id="valueDelta">Asset value</small>
+    </div>
+    <div class="kpi">
+      <span>Today</span>
+      <strong id="profitKpi">Â£0</strong>
+      <small id="marginKpi">0% margin</small>
+    </div>
+    <div class="kpi">
+      <span>Guests</span>
+      <strong id="guestsKpi">0</strong>
+      <small id="demandCapture">0% of demand</small>
+    </div>
+    <div class="kpi">
+      <span>Rating</span>
+      <strong id="ratingKpi">3.2 / 5</strong>
+      <small id="ratingTrend">Stable</small>
+    </div>
+    <div class="kpi">
+      <span>Date</span>
+      <strong id="dateKpi">Day 1</strong>
+      <small id="seasonKpi">Winter</small>
+    </div>
+  </section>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="dashboard" class="active">HQ</button>
+    <button data-tab="attractions">Attractions</button>
+    <button data-tab="food">Food & Retail</button>
+    <button data-tab="staff">Staff</button>
+    <button data-tab="pricing">Pricing</button>
+    <button data-tab="marketing">Marketing</button>
+    <button data-tab="finance">Finance</button>
+    <button data-tab="reports">Reports</button>
+  </nav>
+
+  <main>
+    <section id="dashboard" class="tab active">
+      <div id="alertBanner" class="alert-banner hidden"></div>
+
+      <div class="dashboard-grid">
+        <div class="card operations-card">
+          <div class="card-head">
+            <div>
+              <span class="eyebrow">LIVE OPERATIONS</span>
+              <h2>Park Control</h2>
+            </div>
+            <span id="openStatus" class="status closed">CLOSED</span>
+          </div>
+
+          <div class="forecast">
+            <div class="forecast-main">
+              <span>Forecast demand</span>
+              <strong id="forecastDemand">0</strong>
+              <small id="forecastReason">Based on current setup</small>
+            </div>
+            <div class="forecast-side">
+              <span>Expected result</span>
+              <strong id="forecastProfit">Â£0</strong>
+              <small id="forecastMargin">before random events</small>
+            </div>
+          </div>
+
+          <div class="ops-row">
+            <button id="toggleParkBtn" class="primary large">Open Park</button>
+            <button id="nextDayBtn" class="secondary large">Trade Day</button>
+          </div>
+
+          <div class="metric-row">
+            <div><span>Capacity</span><strong id="capacityStat">0</strong></div>
+            <div><span>Satisfaction</span><strong id="satisfactionStat">0%</strong></div>
+            <div><span>Spend / Guest</span><strong id="spendStat">Â£0</strong></div>
+          </div>
+        </div>
+
+        <div class="card objectives-card" id="objectivesCard">
+          <div class="card-head">
+            <div>
+              <span class="eyebrow">CAREER</span>
+              <h2>Objectives</h2>
+            </div>
+            <span class="reward-chip">XP rewards</span>
+          </div>
+          <div id="objectivesList" class="objective-list"></div>
+        </div>
       </div>
-      <div class="kpi">
-        <span>Today</span>
-        <strong id="profitKpi">£0</strong>
+
+      <div class="dashboard-grid lower">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <span class="eyebrow">LAST TRADING DAY</span>
+              <h2>Business Snapshot</h2>
+            </div>
+          </div>
+          <div class="snapshot-grid">
+            <div><span>Ticket Revenue</span><strong id="ticketRevenue">Â£0</strong></div>
+            <div><span>Food & Retail</span><strong id="secondaryRevenue">Â£0</strong></div>
+            <div><span>Operating Costs</span><strong id="operatingCosts">Â£0</strong></div>
+            <div><span>Debt</span><strong id="debtStat">Â£0</strong></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <span class="eyebrow">NEWSROOM</span>
+              <h2>Latest Update</h2>
+            </div>
+          </div>
+          <div id="eventBox" class="event-box">Welcome to Park Empire.</div>
+          <div id="impactBox" class="impact-box hidden"></div>
+        </div>
       </div>
-      <div class="kpi">
-        <span>Guests Today</span>
-        <strong id="guestsKpi">0</strong>
-      </div>
-      <div class="kpi">
-        <span>Rating</span>
-        <strong id="ratingKpi">0.0★</strong>
-      </div>
-      <div class="kpi">
-        <span>Date</span>
-        <strong id="dateKpi">Day 1</strong>
+
+      <div class="card achievements-card">
+        <div class="card-head">
+          <div>
+            <span class="eyebrow">MILESTONES</span>
+            <h2>Achievements</h2>
+          </div>
+          <span id="achievementCount" class="reward-chip">0 unlocked</span>
+        </div>
+        <div id="achievementsList" class="achievement-grid"></div>
       </div>
     </section>
 
-    <nav class="tabs" id="tabs">
-      <button data-tab="dashboard" class="active">Dashboard</button>
-      <button data-tab="attractions">Attractions</button>
-      <button data-tab="food">Food & Retail</button>
-      <button data-tab="staff">Staff</button>
-      <button data-tab="pricing">Pricing</button>
-      <button data-tab="marketing">Marketing</button>
-      <button data-tab="finance">Finance</button>
-      <button data-tab="reports">Reports</button>
-    </nav>
-
-    <main>
-      <section id="dashboard" class="tab active">
-        <div class="grid two">
-          <div class="card">
-            <div class="card-head">
-              <h2>Park Operations</h2>
-              <span id="openStatus" class="status closed">CLOSED</span>
-            </div>
-            <p>Open the park to trade for the day. Attendance is calculated from price, rating, attractions, marketing, seasonality, capacity and random demand.</p>
-            <div class="ops-row">
-              <button id="toggleParkBtn" class="primary">Open Park</button>
-              <button id="nextDayBtn" class="secondary">Advance Day</button>
-            </div>
-            <div class="mini-grid">
-              <div><span>Potential Demand</span><strong id="demandStat">0</strong></div>
-              <div><span>Park Capacity</span><strong id="capacityStat">0</strong></div>
-              <div><span>Guest Spend</span><strong id="spendStat">£0</strong></div>
-              <div><span>Satisfaction</span><strong id="satisfactionStat">0%</strong></div>
-            </div>
-          </div>
-
-          <div class="card">
-            <h2>Business Snapshot</h2>
-            <div class="snapshot-list">
-              <div><span>Ticket Revenue</span><strong id="ticketRevenue">£0</strong></div>
-              <div><span>Food & Retail</span><strong id="secondaryRevenue">£0</strong></div>
-              <div><span>Operating Costs</span><strong id="operatingCosts">£0</strong></div>
-              <div><span>Debt</span><strong id="debtStat">£0</strong></div>
-            </div>
-          </div>
+    <section id="attractions" class="tab">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">CAPITAL INVESTMENT</span>
+          <h2>Attractions</h2>
+          <p>Every build shows the predicted business impact before you commit.</p>
         </div>
+      </div>
+      <div id="attractionShop" class="shop-grid"></div>
+      <div class="subhead"><h3>Your Attractions</h3><span id="rideCount"></span></div>
+      <div id="ownedAttractions" class="owned-list"></div>
+    </section>
 
-        <div class="grid two">
-          <div class="card">
-            <h2>Latest Event</h2>
-            <div id="eventBox" class="event-box">No events yet.</div>
-          </div>
-          <div class="card">
-            <h2>Management Notes</h2>
-            <ul id="notesList" class="notes"></ul>
-          </div>
+    <section id="food" class="tab">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">SECONDARY SPEND</span>
+          <h2>Food & Retail</h2>
+          <p>Convert attendance into margin. Outlet capacity matters on busy days.</p>
         </div>
-      </section>
+      </div>
+      <div id="foodShop" class="shop-grid"></div>
+      <div class="subhead"><h3>Your Outlets</h3><span id="outletCount"></span></div>
+      <div id="ownedFood" class="owned-list"></div>
+    </section>
 
-      <section id="attractions" class="tab">
-        <div class="section-head">
-          <div><h2>Attractions</h2><p>Expand carefully. Major rides can transform demand, but maintenance and debt can destroy cash flow.</p></div>
-        </div>
-        <div id="attractionShop" class="shop-grid"></div>
-        <h3>Your Attractions</h3>
-        <div id="ownedAttractions" class="owned-list"></div>
-      </section>
-
-      <section id="food" class="tab">
-        <div class="section-head">
-          <div><h2>Food & Retail</h2><p>Secondary spend can turn a busy park into a profitable one.</p></div>
-        </div>
-        <div id="foodShop" class="shop-grid"></div>
-        <h3>Your Outlets</h3>
-        <div id="ownedFood" class="owned-list"></div>
-      </section>
-
-      <section id="staff" class="tab">
-        <div class="grid two">
-          <div class="card">
-            <h2>Staffing</h2>
-            <p>Understaffing increases breakdowns, queues and poor reviews. Overstaffing hurts margins.</p>
-            <div id="staffControls"></div>
-          </div>
-          <div class="card">
-            <h2>Recommended Staffing</h2>
-            <div id="staffAdvice" class="snapshot-list"></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="pricing" class="tab">
-        <div class="grid two">
-          <div class="card">
-            <h2>Admission Pricing</h2>
-            <label>Adult Ticket <strong id="ticketPriceLabel">£35</strong></label>
-            <input id="ticketPrice" type="range" min="10" max="90" step="1" />
-            <label>Parking <strong id="parkingLabel">£8</strong></label>
-            <input id="parkingPrice" type="range" min="0" max="30" step="1" />
-            <label>Fast Track <strong id="fastTrackLabel">£0</strong></label>
-            <input id="fastTrackPrice" type="range" min="0" max="50" step="1" />
-          </div>
-          <div class="card">
-            <h2>Price Position</h2>
-            <div id="pricePosition" class="big-message"></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="marketing" class="tab">
-        <div class="grid two">
-          <div class="card">
-            <h2>Campaigns</h2>
-            <div id="marketingOptions" class="shop-grid compact"></div>
-          </div>
-          <div class="card">
-            <h2>Active Marketing</h2>
-            <div id="activeMarketing" class="owned-list"></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="finance" class="tab">
-        <div class="grid two">
-          <div class="card">
-            <h2>Borrowing</h2>
-            <p>Loans provide growth capital but repayments continue even when the park is closed.</p>
-            <div class="loan-actions">
-              <button data-loan="250000" class="secondary loanBtn">Borrow £250k</button>
-              <button data-loan="1000000" class="secondary loanBtn">Borrow £1m</button>
-              <button data-loan="5000000" class="secondary loanBtn">Borrow £5m</button>
-            </div>
-            <button id="repayBtn" class="ghost full">Repay £100k</button>
-          </div>
-          <div class="card">
-            <h2>Financial Position</h2>
-            <div id="financeStats" class="snapshot-list"></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="reports" class="tab">
+    <section id="staff" class="tab">
+      <div class="dashboard-grid">
         <div class="card">
-          <h2>Daily P&L History</h2>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Day</th><th>Guests</th><th>Revenue</th><th>Costs</th><th>Profit</th><th>Rating</th></tr></thead>
-              <tbody id="reportTable"></tbody>
-            </table>
+          <span class="eyebrow">PEOPLE</span>
+          <h2>Staffing</h2>
+          <p class="muted">Understaffing lowers satisfaction and can reduce attendance. Overstaffing eats margin.</p>
+          <div id="staffControls"></div>
+        </div>
+        <div class="card">
+          <span class="eyebrow">WORKFORCE HEALTH</span>
+          <h2>Coverage</h2>
+          <div id="staffScoreBox" class="score-panel"></div>
+          <div id="staffAdvice" class="snapshot-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="tab">
+      <div class="dashboard-grid">
+        <div class="card">
+          <span class="eyebrow">COMMERCIAL</span>
+          <h2>Admission Pricing</h2>
+          <label>Adult Ticket <strong id="ticketPriceLabel">Â£35</strong></label>
+          <input id="ticketPrice" type="range" min="10" max="90" step="1">
+          <label>Parking <strong id="parkingLabel">Â£8</strong></label>
+          <input id="parkingPrice" type="range" min="0" max="30" step="1">
+          <label>Fast Track <strong id="fastTrackLabel">Â£0</strong></label>
+          <input id="fastTrackPrice" type="range" min="0" max="50" step="1">
+        </div>
+        <div class="card">
+          <span class="eyebrow">PRICE ELASTICITY</span>
+          <h2>Commercial Impact</h2>
+          <div id="pricePosition" class="big-message"></div>
+          <div class="comparison-grid">
+            <div><span>Fair value</span><strong id="fairValueStat">Â£0</strong></div>
+            <div><span>Demand effect</span><strong id="priceDemandStat">0%</strong></div>
           </div>
         </div>
-      </section>
-    </main>
-  </div>
+      </div>
+    </section>
 
-  <script src="game.js"></script>
+    <section id="marketing" class="tab">
+      <div class="dashboard-grid">
+        <div class="card">
+          <span class="eyebrow">GROWTH</span>
+          <h2>Campaigns</h2>
+          <div id="marketingOptions" class="shop-grid compact"></div>
+        </div>
+        <div class="card">
+          <span class="eyebrow">ACTIVE CAMPAIGNS</span>
+          <h2>Demand Boost</h2>
+          <div id="activeMarketing" class="owned-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="finance" class="tab">
+      <div class="dashboard-grid">
+        <div class="card">
+          <span class="eyebrow">CAPITAL</span>
+          <h2>Borrowing</h2>
+          <p class="muted">Debt can accelerate growth, but interest continues while the park is closed.</p>
+          <div class="loan-actions">
+            <button data-loan="250000" class="secondary loanBtn">Borrow Â£250k</button>
+            <button data-loan="1000000" class="secondary loanBtn">Borrow Â£1m</button>
+            <button data-loan="5000000" class="secondary loanBtn">Borrow Â£5m</button>
+          </div>
+          <button id="repayBtn" class="ghost full">Repay Â£100k</button>
+        </div>
+        <div class="card">
+          <span class="eyebrow">BALANCE SHEET</span>
+          <h2>Financial Position</h2>
+          <div id="financeStats" class="snapshot-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reports" class="tab">
+      <div class="card">
+        <span class="eyebrow">PERFORMANCE</span>
+        <h2>Daily P&amp;L</h2>
+        <div class="report-summary" id="reportSummary"></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Day</th><th>Guests</th><th>Revenue</th><th>Costs</th><th>Profit</th><th>Rating</th></tr></thead>
+            <tbody id="reportTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<div id="dayModal" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-kicker">DAY COMPLETE</div>
+    <h2 id="modalTitle">Trading Result</h2>
+    <div id="modalHero" class="modal-hero"></div>
+    <div id="modalStats" class="modal-stats"></div>
+    <div id="modalEvent" class="modal-event"></div>
+    <button id="closeModalBtn" class="primary full">Continue</button>
+  </div>
+</div>
+
+<script src="game.js"></script>
 </body>
 </html>
