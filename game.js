@@ -1,19 +1,19 @@
-const SAVE_KEY="parkEmpireV73";
+const SAVE_KEY="parkEmpireV74";
 const money=n=>new Intl.NumberFormat("en-GB",{style:"currency",currency:"GBP",maximumFractionDigits:0}).format(Math.round(n||0));
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 const rand=(a,b)=>Math.random()*(b-a)+a;
 
 const rides=[
-{id:"carousel",name:"Classic Carousel",type:"Family Ride",cost:180000,appeal:6,capacity:350,upkeep:1100,staff:2,buildDays:2,reliability:.985,desc:"Cheap, reliable family attraction."},
-{id:"dodgems",name:"Dodgems",type:"Family Ride",cost:320000,appeal:9,capacity:500,upkeep:1900,staff:3,buildDays:3,reliability:.975,desc:"Dependable throughput and broad family appeal."},
-{id:"drop",name:"Sky Drop",type:"Thrill Ride",cost:720000,appeal:14,capacity:620,upkeep:4200,staff:4,buildDays:5,reliability:.955,desc:"Compact thrill ride with a strong demand boost."},
-{id:"rapids",name:"River Rapids",type:"Water Ride",cost:1400000,appeal:18,capacity:900,upkeep:8500,staff:7,buildDays:8,reliability:.945,desc:"High-capacity family ride with strong seasonal appeal."},
-{id:"woodie",name:"Timber Run",type:"Wooden Coaster",cost:2800000,appeal:28,capacity:1100,upkeep:18000,staff:10,buildDays:14,reliability:.925,desc:"Regional headline coaster with meaningful upkeep."},
-{id:"launch",name:"Velocity",type:"Launch Coaster",cost:4200000,appeal:36,capacity:1250,upkeep:27000,staff:12,buildDays:20,reliability:.91,desc:"Headline thrill coaster with destination appeal."},
-{id:"invert",name:"Skybreaker",type:"Inverted Coaster",cost:5500000,appeal:42,capacity:1350,upkeep:34000,staff:14,buildDays:24,reliability:.90,desc:"Flagship coaster capable of transforming attendance."},
-{id:"dark",name:"Mythic Manor",type:"Dark Ride",cost:7800000,appeal:52,capacity:1600,upkeep:42000,staff:16,buildDays:30,reliability:.94,desc:"Weather-proof headline family attraction."},
-{id:"hyper",name:"Titan",type:"Hyper Coaster",cost:12500000,appeal:70,capacity:1900,upkeep:72000,staff:20,buildDays:45,reliability:.875,desc:"National-scale headline coaster with major financial risk."},
-{id:"giga",name:"Apex 300",type:"Giga Coaster",cost:26000000,appeal:105,capacity:2300,upkeep:130000,staff:26,buildDays:70,reliability:.84,desc:"Ultimate prestige investment for a giant resort."}
+{id:"carousel",name:"Classic Carousel",type:"Family Ride",cost:180000,appeal:6,capacity:350,upkeep:650,staff:2,buildDays:2,reliability:.985,desc:"Cheap, reliable family attraction."},
+{id:"dodgems",name:"Dodgems",type:"Family Ride",cost:320000,appeal:9,capacity:500,upkeep:1050,staff:3,buildDays:3,reliability:.975,desc:"Dependable throughput and broad family appeal."},
+{id:"drop",name:"Sky Drop",type:"Thrill Ride",cost:720000,appeal:14,capacity:620,upkeep:2600,staff:4,buildDays:5,reliability:.955,desc:"Compact thrill ride with a strong demand boost."},
+{id:"rapids",name:"River Rapids",type:"Water Ride",cost:1400000,appeal:18,capacity:900,upkeep:5600,staff:7,buildDays:8,reliability:.945,desc:"High-capacity family ride with strong seasonal appeal."},
+{id:"woodie",name:"Timber Run",type:"Wooden Coaster",cost:2800000,appeal:28,capacity:1100,upkeep:13000,staff:10,buildDays:14,reliability:.925,desc:"Regional headline coaster with meaningful upkeep."},
+{id:"launch",name:"Velocity",type:"Launch Coaster",cost:4200000,appeal:36,capacity:1250,upkeep:21000,staff:12,buildDays:20,reliability:.91,desc:"Headline thrill coaster with destination appeal."},
+{id:"invert",name:"Skybreaker",type:"Inverted Coaster",cost:5500000,appeal:42,capacity:1350,upkeep:27500,staff:14,buildDays:24,reliability:.90,desc:"Flagship coaster capable of transforming attendance."},
+{id:"dark",name:"Mythic Manor",type:"Dark Ride",cost:7800000,appeal:52,capacity:1600,upkeep:26000,staff:16,buildDays:30,reliability:.94,desc:"Weather-proof headline family attraction."},
+{id:"hyper",name:"Titan",type:"Hyper Coaster",cost:12500000,appeal:70,capacity:1900,upkeep:62000,staff:20,buildDays:45,reliability:.875,desc:"National-scale headline coaster with major financial risk."},
+{id:"giga",name:"Apex 300",type:"Giga Coaster",cost:26000000,appeal:105,capacity:2300,upkeep:118000,staff:26,buildDays:70,reliability:.84,desc:"Ultimate prestige investment for a giant resort."}
 ];
 
 const outlets=[
@@ -58,13 +58,13 @@ function blankLive(){
 
 function newState(){
   return{
-    version:73,day:1,cash:1500000,debt:0,negativeDays:0,parkOpen:false,
+    version:74,day:1,cash:1500000,debt:0,negativeDays:0,parkOpen:false,
     rating:3.2,reputation:50,satisfaction:72,
     ticketPrice:32,parkingPrice:7,fastTrackPrice:0,
     rides:[{uid:1,id:"carousel",condition:100,daysLeft:0,down:false,ageDays:120}],
     outlets:[{uid:1,id:"coffee",daysLeft:0,ageDays:90}],
     nextRideUid:2,nextOutletUid:2,
-    staff:{operators:3,mechanics:1,cleaners:1,security:1,food:2,managers:1},
+    staff:{operators:2,mechanics:1,cleaners:1,security:1,food:1,managers:1},
     marketing:[],
     activity:[
       {title:"Company founded",detail:"Started with Â£1,500,000 cash and a small local park."},
@@ -83,7 +83,7 @@ let timer=null;
 function load(){
   try{
     const s=JSON.parse(localStorage.getItem(SAVE_KEY));
-    if(!s||s.version!==73)return null;
+    if(!s||s.version!==74)return null;
     s.live=blankLive();s.parkOpen=false;
     return s;
   }catch{return null;}
@@ -134,8 +134,8 @@ function seasonFactor(day){
   if(d>=170&&d<=240)return 1.20;
   if(d>=90&&d<170)return 1.04;
   if(d>240&&d<=305)return .97;
-  if(d>=330||d<=55)return .48;
-  return .72;
+  if(d>=330||d<=55)return .58;
+  return .78;
 }
 function weekend(day){return day%7===6||day%7===0;}
 function weekendFactor(day){return weekend(day)?1.22:1;}
@@ -143,9 +143,9 @@ function fairTicket(){return 18+appeal()*.34+state.rating*3.1;}
 function priceFactor(){return clamp(1-(state.ticketPrice-fairTicket())/62,.38,1.18);}
 function admissionYield(){return clamp(.68 + state.rating*.015 - Math.max(0,state.ticketPrice-45)*.002,.60,.78);}
 function demandEstimate(weather=state.live.weather){
-  const base=90+appeal()*42;
-  const rep=.62+state.reputation/100*.72;
-  const rating=.66+state.rating/5*.56;
+  const base=155+appeal()*46;
+  const rep=.72+state.reputation/100*.62;
+  const rating=.72+state.rating/5*.50;
   return Math.max(0,Math.round(base*rep*rating*priceFactor()*(1+marketingBoost())*seasonFactor(state.day)*weekendFactor(state.day)*(weather?.demand||1)));
 }
 
@@ -167,7 +167,7 @@ function staffingScore(){
   return vals.reduce((a,b)=>a+b,0)/vals.length;
 }
 function payroll(){
-  const rates={operators:155,mechanics:220,cleaners:125,security:155,food:135,managers:280};
+  const rates={operators:125,mechanics:180,cleaners:100,security:125,food:105,managers:210};
   return Object.entries(state.staff).reduce((s,[k,v])=>s+rates[k]*v,0);
 }
 
@@ -186,14 +186,23 @@ function debtInterestDaily(){return state.debt*debtRate()/365;}
 function debtServiceDaily(){return debtPrincipalDaily()+debtInterestDaily();}
 
 function overhead(){
-  const insurance=2200+operationalRides().reduce((s,r)=>s+rideById(r.id).cost*.000035,0);
-  const utilities=1400+operationalRides().length*260+operationalOutlets().length*120;
-  const admin=1800+Math.max(0,operationalRides().length-3)*300;
+  const rideInvestment=operationalRides().reduce((s,r)=>s+rideById(r.id).cost,0);
+  const outletInvestment=operationalOutlets().reduce((s,o)=>s+outletById(o.id).cost,0);
+
+  // Small parks have genuinely small corporate overhead.
+  // Insurance and administration scale progressively as the estate grows.
+  const insurance=650 + rideInvestment*.000018 + outletInvestment*.000010;
+  const utilities=500 + operationalRides().length*150 + operationalOutlets().length*75;
+  const admin=450
+    + Math.max(0,operationalRides().length-3)*240
+    + Math.max(0,operationalOutlets().length-3)*120
+    + Math.max(0,parkValueGross()-3000000)*.00010;
+
   return insurance+utilities+admin;
 }
 function fixedCosts(){
   const upkeep=operationalRides().reduce((s,r)=>s+rideById(r.id).upkeep,0);
-  const outletFixed=operationalOutlets().length*420;
+  const outletFixed=operationalOutlets().length*180;
   return upkeep+outletFixed+payroll()+overhead();
 }
 
@@ -235,7 +244,7 @@ function forecast(){
     const x=outletById(o.id),served=Math.min(guests*.28,x.capacity),g=served*x.spend;
     gross+=g;profitPart+=g*x.margin;
   });
-  const variable=guests*2.2;
+  const variable=guests*1.55;
   const revenue=ticket+parking+fast+gross;
   const debtSvc=debtServiceDaily();
   const costs=fixedCosts()+(gross-profitPart)+variable+debtSvc;
@@ -308,7 +317,7 @@ function liveTick(){
   operationalOutlets().forEach(o=>{
     const x=outletById(o.id),stat=L.outletStats[o.uid]||(L.outletStats[o.uid]={customers:0,revenue:0});
     const seasonal=x.id==="icecream"?(seasonName(state.day)==="Summer"?1.22:.72):1;
-    const possible=Math.min(L.guestsInPark*.055,x.capacity*9/L.totalTicks)*seasonal*(L.weather?.spend||1);
+    const possible=Math.min(L.guestsInPark*.070,x.capacity*9/L.totalTicks)*seasonal*(L.weather?.spend||1);
     const served=Math.max(0,Math.round(possible*rand(.65,.95)));
     const gross=served*x.spend*rand(.82,1.08);
     stat.customers+=served;stat.revenue+=gross;outletRev+=gross;outletCost+=gross*(1-x.margin);
@@ -327,7 +336,7 @@ function liveTick(){
   });
 
   const tickRevenue=ticketRev+parkingRev+fastRev+outletRev;
-  const tickCosts=fixedCosts()/L.totalTicks+outletCost+arrival*2.2+debtServiceDaily()/L.totalTicks;
+  const tickCosts=fixedCosts()/L.totalTicks+outletCost+arrival*1.55+debtServiceDaily()/L.totalTicks;
   L.revenue+=tickRevenue;L.costs+=tickCosts;L.debtService+=debtServiceDaily()/L.totalTicks;L.lastRevenueRate=tickRevenue*4;
   state.cash+=tickRevenue-tickCosts;
 
@@ -401,7 +410,7 @@ function rideImpact(r){
   const newAppeal=appeal()+added;
   const fairAfter=18+newAppeal*.34+state.rating*3.1;
   const pfAfter=clamp(1-(state.ticketPrice-fairAfter)/62,.38,1.18);
-  const ratio=(90+newAppeal*42)/(90+appeal()*42)*(pfAfter/priceFactor());
+  const ratio=(155+newAppeal*46)/(155+appeal()*46)*(pfAfter/priceFactor());
   return Math.max(0,Math.round(before*(ratio-1)));
 }
 
