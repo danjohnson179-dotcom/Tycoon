@@ -583,3 +583,162 @@ th{font-size:6px;color:#7e92a2;background:#f5f9fb}
     animation:none;
   }
 }
+
+
+/* =========================================================
+   v1.05.0 — PIXIJS / WEBGL WORLD
+   The WebGL world is the visual game surface. DOM remains UI.
+   ========================================================= */
+
+.ride-visual-3d,
+.park-3d-overview,
+.park3d-canvas,
+.render-badge,
+.park-render-label{
+  display:none !important;
+}
+
+.park-skyline{
+  margin:13px -3px 5px;
+  overflow:hidden;
+  border-radius:16px;
+  background:#071b29;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    0 18px 38px rgba(0,16,28,.18);
+}
+
+.pixi-park-shell{
+  position:relative;
+  height:360px;
+  overflow:hidden;
+  border-radius:16px;
+  background:
+    radial-gradient(circle at 70% 8%,rgba(139,220,243,.26),transparent 30%),
+    #0b2638;
+}
+
+.pixi-park-mount{
+  position:absolute;
+  inset:0;
+  touch-action:none;
+}
+
+.pixi-park-mount canvas{
+  display:block;
+  width:100%;
+  height:100%;
+  touch-action:none;
+}
+
+.pixi-world-label,
+.pixi-world-help{
+  position:absolute;
+  z-index:4;
+  pointer-events:none;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+.pixi-world-label{
+  left:11px;
+  bottom:11px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 8px;
+  border-radius:999px;
+  background:rgba(5,22,34,.72);
+  border:1px solid rgba(255,255,255,.12);
+  color:#e6f6fb;
+  font-size:6px;
+  font-weight:950;
+  letter-spacing:.7px;
+}
+
+.pixi-world-label span{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#5de0c4;
+  box-shadow:0 0 10px rgba(93,224,196,.9);
+  animation:pixiWorldPulse 1.35s ease-in-out infinite;
+}
+
+.pixi-world-help{
+  top:10px;
+  right:10px;
+  padding:6px 8px;
+  border-radius:999px;
+  background:rgba(5,22,34,.58);
+  border:1px solid rgba(255,255,255,.09);
+  color:#bfd4de;
+  font-size:6px;
+  font-weight:800;
+}
+
+@keyframes pixiWorldPulse{
+  50%{opacity:.35;transform:scale(.72)}
+}
+
+/* Card graphics are now restrained UI identity marks.
+   The actual animated asset is visible in the WebGL park world. */
+.asset-thumb{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin:-13px -13px 11px;
+  padding:11px 12px;
+  min-height:62px;
+  color:#173b51;
+  background:
+    linear-gradient(135deg,rgba(231,244,251,.98),rgba(243,250,253,.98));
+  border-bottom:1px solid #dceaf1;
+}
+
+.asset-thumb-mark{
+  width:38px;
+  height:38px;
+  flex:0 0 38px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  color:#fff;
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.4px;
+  background:linear-gradient(145deg,#2f83e6,#22a7b8);
+  box-shadow:0 8px 18px rgba(47,131,230,.18);
+}
+
+.outlet-thumb .asset-thumb-mark{
+  background:linear-gradient(145deg,#19ad94,#4cad76);
+}
+
+.asset-thumb span{
+  display:block;
+  color:#718b9d;
+  font-size:7px;
+  font-weight:800;
+}
+
+.asset-thumb strong{
+  display:block;
+  margin-top:2px;
+  color:#294d64;
+  font-size:7px;
+  letter-spacing:.5px;
+}
+
+@media(max-width:760px){
+  .pixi-park-shell{height:300px}
+}
+
+@media(max-width:430px){
+  .pixi-park-shell{height:270px}
+  .pixi-world-help{display:none}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .pixi-world-label span{animation:none}
+}

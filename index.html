@@ -16,7 +16,7 @@
       <div class="brandcopy">
         <div class="brand-title-row">
           <h1>Park Empire</h1>
-          <button id="versionBtn" class="version-badge">v1.04.0</button>
+          <button id="versionBtn" class="version-badge">v1.05.0</button>
         </div>
         <p>Theme Park Business Simulator</p>
       </div>
@@ -364,18 +364,18 @@
 <div id="releaseModal" class="modal hidden">
   <div class="modal-card release-modal-card">
     <div class="panel-head">
-      <div><span class="eyebrow">RELEASE</span><h2>Park Empire v1.04.0</h2></div>
+      <div><span class="eyebrow">RELEASE</span><h2>Park Empire v1.05.0</h2></div>
       <button id="releaseCloseTop" class="panel-btn compact-btn">Close</button>
     </div>
     <div class="release-hero">
-      <strong>3D Attraction Engine</strong>
-      <span>A procedural 3D renderer now generates attraction geometry, moving ride components, trains, supports, buildings and the live park view entirely in code.</span>
+      <strong>PixiJS World Integration</strong>
+      <span>The park world is now rendered by PixiJS through WebGL and connected directly to your real Park Empire save.</span>
     </div>
     <div class="release-notes-grid">
       <div><span>DIFFICULTY</span><strong>Easy / Medium / Hard</strong><small>Economy, demand, costs, incidents and lending adapt to the selected mode.</small></div>
       <div><span>ADMIN</span><strong>QA console</strong><small>Local save manipulation, economic simulation and browser/device diagnostics.</small></div>
-      <div><span>3D ENGINE</span><strong>Procedural attraction rendering</strong><small>Perspective projection, shaded geometry, structural supports and animated moving parts with no external models.</small></div>
-      <div><span>PARK VIEW</span><strong>Living 3D estate</strong><small>Your operational attractions appear as 3D landmarks with moving guests and live ride animation.</small></div>
+      <div><span>WEBGL WORLD</span><strong>PixiJS park renderer</strong><small>Your actual owned rides, outlets, construction and guest traffic are rendered in a live isometric game world.</small></div>
+      <div><span>CAMERA</span><strong>Pan, zoom &amp; parallax</strong><small>Smooth inertial camera movement, high-DPI rendering, depth sorting, weather and animated park life.</small></div>
     </div>
     <button id="releaseCloseBtn" class="panel-btn primary-btn">Back to game</button>
   </div>
@@ -394,8 +394,8 @@
   </div>
 </div>
 
-<script src="park3d.js"></script>
 <script src="game.js"></script>
+<script type="module" src="pixi-world.js"></script>
 <script>
 document.querySelectorAll('.mobile-dock button').forEach(btn=>{
   btn.addEventListener('click',()=>{
