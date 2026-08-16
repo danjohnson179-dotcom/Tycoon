@@ -16,13 +16,14 @@
       <div>
         <div class="brand-title-line">
           <h1>Park Empire</h1>
-          <button id="versionBtn" class="version-badge">v1.0</button>
+          <button id="versionBtn" class="version-badge">v1.01.0</button>
         </div>
         <p>Theme Park Business Simulator</p>
       </div>
     </div>
     <div class="topactions">
       <button id="saveBtn" class="icon-btn">Save</button>
+      <a href="admin.html" class="icon-btn admin-link">Admin</a>
       <button id="resetBtn" class="icon-btn danger">New</button>
     </div>
   </header>
@@ -30,11 +31,11 @@
   <section class="hud">
     <div class="hud-cell cash">
       <span>CASH</span>
-      <strong id="cashKpi">£0</strong>
+      <strong id="cashKpi">Â£0</strong>
     </div>
     <div class="hud-cell profit">
       <span>LIVE P&amp;L</span>
-      <strong id="profitKpi">£0</strong>
+      <strong id="profitKpi">Â£0</strong>
     </div>
     <div class="hud-cell guests">
       <span>GUESTS</span>
@@ -45,6 +46,12 @@
       <strong id="ratingKpi">3.2 / 5</strong>
     </div>
   </section>
+
+  <div class="difficulty-strip">
+    <span>Difficulty</span>
+    <strong id="difficultyIndicator">Medium</strong>
+    <small id="difficultySummary">Balanced park economics and business risk.</small>
+  </div>
 
   <nav class="tabs desktop-tabs">
     <button data-tab="overview" class="active">Overview</button>
@@ -91,26 +98,26 @@
             </div>
             <div class="big-stat">
               <span>REVENUE</span>
-              <strong id="liveRevenue">£0</strong>
-              <small id="revenueRate">£0 / hour</small>
+              <strong id="liveRevenue">Â£0</strong>
+              <small id="revenueRate">Â£0 / hour</small>
             </div>
             <div class="big-stat">
               <span>COSTS</span>
-              <strong id="liveCosts">£0</strong>
+              <strong id="liveCosts">Â£0</strong>
               <small>Operating + stock + debt</small>
             </div>
             <div class="big-stat accent">
               <span>PROFIT</span>
-              <strong id="liveProfit">£0</strong>
+              <strong id="liveProfit">Â£0</strong>
               <small id="profitMargin">0% margin</small>
             </div>
           </div>
 
           <div class="forecast-cards">
             <div><span>Forecast demand</span><strong id="forecastDemand">0</strong></div>
-            <div><span>Forecast profit</span><strong id="forecastProfit">£0</strong></div>
+            <div><span>Forecast profit</span><strong id="forecastProfit">Â£0</strong></div>
             <div><span>Capacity</span><strong id="capacityKpi">0</strong></div>
-            <div><span>Fixed cost</span><strong id="fixedCostKpi">£0</strong></div>
+            <div><span>Fixed cost</span><strong id="fixedCostKpi">Â£0</strong></div>
           </div>
 
           <div class="control-deck">
@@ -125,10 +132,10 @@
             <span class="section-tag">BUSINESS HEALTH</span>
             <h3>Company snapshot</h3>
             <div class="snapshot-grid">
-              <div><span>Park value</span><strong id="parkValueKpi">£0</strong></div>
-              <div><span>Debt</span><strong id="debtKpi">£0</strong></div>
-              <div><span>Headroom</span><strong id="headroomKpi">£0</strong></div>
-              <div><span>Debt / day</span><strong id="debtServiceKpi">£0</strong></div>
+              <div><span>Park value</span><strong id="parkValueKpi">Â£0</strong></div>
+              <div><span>Debt</span><strong id="debtKpi">Â£0</strong></div>
+              <div><span>Headroom</span><strong id="headroomKpi">Â£0</strong></div>
+              <div><span>Debt / day</span><strong id="debtServiceKpi">Â£0</strong></div>
               <div><span>Staffing</span><strong id="staffCoverageKpi">0%</strong></div>
             </div>
           </div>
@@ -208,17 +215,17 @@
           <h3>Guest pricing</h3>
 
           <div class="slider-block">
-            <label>Adult ticket <strong id="ticketPriceLabel">£35</strong></label>
+            <label>Adult ticket <strong id="ticketPriceLabel">Â£35</strong></label>
             <input id="ticketPrice" type="range" min="10" max="90" step="1">
           </div>
 
           <div class="slider-block">
-            <label>Parking <strong id="parkingPriceLabel">£8</strong></label>
+            <label>Parking <strong id="parkingPriceLabel">Â£8</strong></label>
             <input id="parkingPrice" type="range" min="0" max="30" step="1">
           </div>
 
           <div class="slider-block">
-            <label>Fast Track <strong id="fastTrackPriceLabel">£0</strong></label>
+            <label>Fast Track <strong id="fastTrackPriceLabel">Â£0</strong></label>
             <input id="fastTrackPrice" type="range" min="0" max="50" step="1">
           </div>
 
@@ -264,7 +271,7 @@
 
           <label>Amount to borrow</label>
           <div class="borrow-input-row">
-            <span>£</span>
+            <span>Â£</span>
             <input id="borrowAmountInput" type="number" min="10000" step="10000" value="250000" inputmode="numeric">
           </div>
 
@@ -280,7 +287,7 @@
           <div id="loanOfferBox" class="loan-offer hidden"></div>
           <button id="acceptLoanBtn" class="game-action primary full hidden">Accept bank offer</button>
           <button id="declineLoanBtn" class="game-action secondary full hidden">Decline offer</button>
-          <button id="repayBtn" class="game-action secondary full">Repay £100k early</button>
+          <button id="repayBtn" class="game-action secondary full">Repay Â£100k early</button>
         </div>
       </div>
 
@@ -301,7 +308,7 @@
           <div class="report-bar-row">
             <span>Profit trend</span>
             <div class="report-bar-track"><div id="profitTrendBar" class="report-bar-fill"></div></div>
-            <strong id="profitTrendValue">£0</strong>
+            <strong id="profitTrendValue">Â£0</strong>
           </div>
         </div>
 
@@ -326,13 +333,60 @@
 </div>
 
 
+
+<div id="difficultyModal" class="modal hidden">
+  <div class="modal-card difficulty-modal-card">
+    <span class="section-tag">NEW COMPANY</span>
+    <h2>Choose your difficulty</h2>
+    <p class="difficulty-intro">This affects the business simulation throughout your save. Attractions remain available on every difficulty.</p>
+
+    <div class="difficulty-options">
+      <button class="difficulty-choice easy" data-difficulty="easy">
+        <div class="difficulty-choice-head">
+          <strong>Easy</strong>
+          <span>Relaxed</span>
+        </div>
+        <p>More starting cash, stronger demand, lower costs and easier lending.</p>
+        <div class="difficulty-stats">
+          <span>Â£2.0m start</span><span>+15% demand</span><span>-12% fixed costs</span>
+        </div>
+      </button>
+
+      <button class="difficulty-choice medium selected" data-difficulty="medium">
+        <div class="difficulty-choice-head">
+          <strong>Medium</strong>
+          <span>Recommended</span>
+        </div>
+        <p>The intended Park Empire economy with meaningful business risk.</p>
+        <div class="difficulty-stats">
+          <span>Â£1.5m start</span><span>Standard demand</span><span>Standard risk</span>
+        </div>
+      </button>
+
+      <button class="difficulty-choice hard" data-difficulty="hard">
+        <div class="difficulty-choice-head">
+          <strong>Hard</strong>
+          <span>Tycoon</span>
+        </div>
+        <p>Tighter cash, weaker demand, higher costs, greater incident risk and stricter banks.</p>
+        <div class="difficulty-stats">
+          <span>Â£1.2m start</span><span>-10% demand</span><span>+14% fixed costs</span>
+        </div>
+      </button>
+    </div>
+
+    <button id="difficultyStartBtn" class="game-action primary full">Start New Company - Medium</button>
+    <button id="difficultyCancelBtn" class="game-action secondary full hidden">Cancel</button>
+  </div>
+</div>
+
 <div id="releaseModal" class="modal hidden">
   <div class="modal-card release-modal-card">
     <div class="release-modal-head">
       <div>
         <span class="section-tag">OFFICIAL RELEASE</span>
-        <h2>Park Empire v1.0</h2>
-        <p>Launch Build</p>
+        <h2>Park Empire v1.01.0</h2>
+        <p>Difficulty & QA Update</p>
       </div>
       <button id="releaseCloseTop" class="release-close">Close</button>
     </div>
@@ -379,15 +433,20 @@
         <small>Track daily results, trends, cumulative guests, profit and best-performing days.</small>
       </div>
       <div>
-        <span>GAME CONTROLS</span>
-        <strong>Play at your pace</strong>
-        <small>1x, 2x and 4x speeds plus Skip to End of Day when you want a faster result.</small>
+        <span>DIFFICULTY</span>
+        <strong>Easy, Medium or Hard</strong>
+        <small>Difficulty changes cash, demand, costs, borrowing access and operational risk across the whole game.</small>
+      </div>
+      <div>
+        <span>QA / ADMIN</span>
+        <strong>Built-in testing console</strong>
+        <small>Password-protected local diagnostics, economic simulation and test controls for stress testing.</small>
       </div>
     </div>
 
     <div class="release-footer">
       <span>Release</span>
-      <strong>v1.0 - Launch</strong>
+      <strong>v1.01.0 - Difficulty & QA Update</strong>
     </div>
 
     <button id="releaseCloseBtn" class="game-action primary full">Back to game</button>
