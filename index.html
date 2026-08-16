@@ -188,26 +188,66 @@
     </div>
 
     <div class="card">
-      <span class="eyebrow">LENDING</span>
-      <h2>Borrowing capacity</h2>
+      <span class="eyebrow">BANK MANAGER</span>
+      <h2>Negotiate funding</h2>
       <div id="creditPanel" class="credit-panel"></div>
-      <div class="loan-grid">
-        <button data-loan="250000" class="secondary loanBtn">Borrow £250k</button>
-        <button data-loan="1000000" class="secondary loanBtn">Borrow £1m</button>
-        <button data-loan="5000000" class="secondary loanBtn">Borrow £5m</button>
+
+      <label>Amount you want to borrow</label>
+      <div class="borrow-input-row">
+        <span>£</span>
+        <input id="borrowAmountInput" type="number" min="10000" step="10000" value="250000" inputmode="numeric">
       </div>
-      <button id="repayBtn" class="ghost full">Repay £100k</button>
+
+      <button id="requestLoanBtn" class="secondary full">Ask bank for funding</button>
+
+      <div id="bankConversation" class="bank-conversation">
+        <div class="bank-message bank">
+          <strong>Bank Manager</strong>
+          <p>Tell me how much you want to borrow and I will assess the business.</p>
+        </div>
+      </div>
+
+      <div id="loanOfferBox" class="loan-offer hidden"></div>
+      <button id="acceptLoanBtn" class="primary full hidden">Accept bank offer</button>
+      <button id="declineLoanBtn" class="ghost full hidden">Decline offer</button>
+
+      <button id="repayBtn" class="ghost full">Repay £100k early</button>
     </div>
   </div>
 
   <div class="card">
-    <span class="eyebrow">TRADING HISTORY</span>
-    <h2>Daily results</h2>
+    <div class="report-head">
+      <div>
+        <span class="eyebrow">TRADING REPORT</span>
+        <h2>Business performance</h2>
+      </div>
+      <span id="reportTrendBadge" class="trend-badge">NO DATA</span>
+    </div>
+
+    <div id="reportSummary" class="report-summary"></div>
+
+    <div class="report-bars">
+      <div class="report-bar-row">
+        <span>Guests trend</span>
+        <div class="report-bar-track"><div id="guestTrendBar" class="report-bar-fill"></div></div>
+        <strong id="guestTrendValue">0</strong>
+      </div>
+      <div class="report-bar-row">
+        <span>Profit trend</span>
+        <div class="report-bar-track"><div id="profitTrendBar" class="report-bar-fill"></div></div>
+        <strong id="profitTrendValue">£0</strong>
+      </div>
+    </div>
+
     <div class="table-wrap">
       <table>
         <thead><tr><th>Day</th><th>Guests</th><th>Revenue</th><th>Costs</th><th>Debt svc</th><th>Profit</th></tr></thead>
         <tbody id="historyTable"></tbody>
       </table>
+    </div>
+
+    <div id="emptyReportState" class="empty-report">
+      Complete your first trading day to generate the report.
     </div>
   </div>
 </section>
