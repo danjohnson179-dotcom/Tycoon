@@ -827,3 +827,4 @@ th{font-size:6px;color:#7e92a2;background:#f5f9fb}
   .three-world-help{display:none}
 }
 @media(prefers-reduced-motion:reduce){.three-world-label span{animation:none}}
+.cloud-status{padding:.45rem .7rem;border-radius:999px;background:#dcebf3;font-size:.72rem;font-weight:800}.cloud-status[data-tone="success"]{background:#d9f7e7;color:#12613b}.cloud-status[data-tone="warning"]{background:#fff0c9;color:#795300}.cloud-status[data-tone="error"]{background:#ffe1e1;color:#8e2525}.auth-input{display:block;width:100%;box-sizing:border-box;margin:.7rem 0;padding:.85rem;border:1px solid #ccd8df;border-radius:10px;font:inherit}

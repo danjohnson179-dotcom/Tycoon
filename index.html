@@ -24,13 +24,14 @@
       <div class="brandcopy">
         <div class="brand-title-row">
           <h1>Park Empire</h1>
-          <button id="versionBtn" class="version-badge">v1.06.0</button>
+          <button id="versionBtn" class="version-badge">v1.07.0</button>
         </div>
         <p>Theme Park Business Simulator</p>
       </div>
     </div>
 
     <div class="header-actions">
+      <span id="cloudSaveStatus" class="cloud-status" data-tone="neutral">Local save</span><button id="accountBtn" class="header-btn">Sign in</button>
       <button id="saveBtn" class="header-btn">Save</button>
       <a href="admin.html" class="header-btn admin-link">Admin</a>
       <button id="resetBtn" class="header-btn danger">New</button>
@@ -372,7 +373,7 @@
 <div id="releaseModal" class="modal hidden">
   <div class="modal-card release-modal-card">
     <div class="panel-head">
-      <div><span class="eyebrow">RELEASE</span><h2>Park Empire v1.06.0</h2></div>
+      <div><span class="eyebrow">RELEASE</span><h2>Park Empire v1.07.0</h2></div>
       <button id="releaseCloseTop" class="panel-btn compact-btn">Close</button>
     </div>
     <div class="release-hero">
@@ -389,6 +390,8 @@
   </div>
 </div>
 
+<div id="accountModal" class="modal hidden"><div class="modal-card"><div class="panel-head"><div><span class="eyebrow">ACCOUNT</span><h2 id="accountEmail">Not signed in</h2></div><button id="accountCloseBtn" class="panel-btn">Close</button></div><div id="signedOutPanel"><input id="authEmail" class="auth-input" type="email" placeholder="Email"><input id="authPassword" class="auth-input" type="password" placeholder="Password (6+ characters)"><div id="authMessage"></div><button id="signInBtn" class="panel-btn primary-btn">Sign In</button> <button id="createAccountBtn" class="panel-btn">Create Account</button></div><div id="signedInPanel" class="hidden"><p>Your park is synced privately to the cloud.</p><button id="logoutBtn" class="panel-btn">Sign Out</button></div></div></div>
+<div id="migrationModal" class="modal hidden"><div class="modal-card"><span class="eyebrow">LOCAL PARK FOUND</span><h2>Choose which park to keep</h2><p id="migrationCloudDetail"></p><p><strong>Nothing is overwritten until you choose.</strong></p><button id="uploadLocalBtn" class="panel-btn primary-btn">Upload Existing Park</button> <button id="useCloudBtn" class="panel-btn">Use Cloud Park</button></div></div>
 <div id="toast" class="toast"></div>
 
 <div id="dayModal" class="modal hidden">
@@ -402,7 +405,7 @@
   </div>
 </div>
 
-<script src="game.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script><script src="auth-cloud.js"></script><script src="game.js"></script>
 <script type="module" src="three-world.js"></script>
 
 <script>

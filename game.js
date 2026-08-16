@@ -252,8 +252,10 @@ function load(){
 
 function save(show=false){
   localStorage.setItem(SAVE_KEY,JSON.stringify(state));
+  window.ParkEmpireCloud?.scheduleUpload(state);
   if(show)toast("Game saved");
 }
+window.ParkEmpireSaveAPI={hasExistingLocalSave(){return!!(localStorage.getItem(SAVE_KEY)||localStorage.getItem(LEGACY_SAVE_KEY))},getSaveData(){return structuredClone(state)},applyCloudSave(x){if(!x||x.version!==1010)return;state=structuredClone(x);state.live=blankLive();state.parkOpen=false;localStorage.setItem(SAVE_KEY,JSON.stringify(state));render();toast("Cloud park loaded")},startFreshForCloud(){state=newState("medium");localStorage.setItem(SAVE_KEY,JSON.stringify(state));render();openDifficultyModal("fresh")}};
 
 function rideById(id){return rides.find(x=>x.id===id);}
 function outletById(id){return outlets.find(x=>x.id===id);}
