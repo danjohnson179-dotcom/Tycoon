@@ -31,3 +31,10 @@ main{width:min(1260px,100%);margin:0 auto;padding:16px}.tab{display:none}.tab.ac
 .sell-btn:active{
   transform:scale(.985);
 }
+
+.construction-box{margin-top:10px;padding:10px;border-radius:10px;background:rgba(245,185,76,.055);border:1px solid rgba(245,185,76,.16)}
+.construction-copy{display:flex;justify-content:space-between;gap:10px;color:#d8c18d;font-size:8px;margin-bottom:6px}
+.construction-copy strong{color:#f5ca75}.construction-track{height:7px;overflow:hidden;border-radius:99px;background:#07111f;border:1px solid rgba(245,185,76,.10)}
+.construction-fill{height:100%;background:linear-gradient(90deg,#c78b28,#f5b94c)}
+.construction-box small{display:block;margin-top:7px;color:#9e9278;font-size:8px;line-height:1.4}
+.expedite-btn{border-radius:9px;min-height:40px;padding:8px 12px;font-weight:850;border:1px solid rgba(245,185,76,.26);background:rgba(245,185,76,.10);color:#f6cf83}
