@@ -3,266 +3,221 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#081522">
+  <meta name="theme-color" content="#0b263a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Park Empire</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div id="app">
-  <div class="ambient ambient-one"></div>
-  <div class="ambient ambient-two"></div>
-
-  <header class="topbar">
+  <header class="game-header">
     <div class="brandline">
-      <div class="brandmark">
-        <span>PE</span>
-      </div>
-      <div class="brandcopy">
-        <h1>Park Empire</h1>
+      <div class="brandmark">PE</div>
+      <div>
+        <div class="brand-title-line">
+          <h1>Park Empire</h1>
+          <button id="versionBtn" class="version-badge">v1.0</button>
+        </div>
         <p>Theme Park Business Simulator</p>
       </div>
     </div>
     <div class="topactions">
-      <button id="saveBtn" class="smallbtn">Save</button>
-      <button id="resetBtn" class="smallbtn danger">New</button>
+      <button id="saveBtn" class="icon-btn">Save</button>
+      <button id="resetBtn" class="icon-btn danger">New</button>
     </div>
   </header>
 
-  <section class="statusbar">
-    <div class="status-kpi cash">
-      <span>Cash</span>
+  <section class="hud">
+    <div class="hud-cell cash">
+      <span>CASH</span>
       <strong id="cashKpi">£0</strong>
-      <small>Available funds</small>
     </div>
-    <div class="status-kpi pnl">
-      <span>Live P&amp;L</span>
+    <div class="hud-cell profit">
+      <span>LIVE P&amp;L</span>
       <strong id="profitKpi">£0</strong>
-      <small>Current day</small>
     </div>
-    <div class="status-kpi guests">
-      <span>Guests Today</span>
+    <div class="hud-cell guests">
+      <span>GUESTS</span>
       <strong id="guestsKpi">0</strong>
-      <small>Turnstile count</small>
     </div>
-    <div class="status-kpi rating">
-      <span>Rating</span>
+    <div class="hud-cell rating">
+      <span>RATING</span>
       <strong id="ratingKpi">3.2 / 5</strong>
-      <small>Guest sentiment</small>
     </div>
   </section>
 
-  <nav class="tabs">
-    <button data-tab="overview" class="active"><span>Overview</span></button>
-    <button data-tab="attractions"><span>Attractions</span></button>
-    <button data-tab="food"><span>Food &amp; Retail</span></button>
-    <button data-tab="operations"><span>Operations</span></button>
-    <button data-tab="finance"><span>Finance</span></button>
+  <nav class="tabs desktop-tabs">
+    <button data-tab="overview" class="active">Overview</button>
+    <button data-tab="attractions">Attractions</button>
+    <button data-tab="food">Food &amp; Retail</button>
+    <button data-tab="operations">Operations</button>
+    <button data-tab="finance">Finance</button>
   </nav>
 
   <main>
     <section id="overview" class="tab active">
       <div id="warningBanner" class="warning-banner hidden"></div>
 
-      <div class="dashboard-hero">
-        <div class="card live-card premium-card">
-          <div class="live-head">
+      <div class="game-board">
+        <div class="park-panel">
+          <div class="park-panel-top">
             <div>
-              <span class="eyebrow">LIVE PARK CONTROL</span>
-              <div class="title-row">
+              <span class="section-tag">PARK CONTROL</span>
+              <div class="park-title-row">
                 <h2 id="dayTitle">Day 1</h2>
                 <span id="parkStatus" class="status closed">CLOSED</span>
               </div>
               <p id="daySubtitle">Winter weekday</p>
             </div>
-            <div class="clock-panel">
-              <span>Park time</span>
+            <div class="clock-chip">
+              <span>PARK TIME</span>
               <strong id="gameClock">09:00</strong>
             </div>
           </div>
 
-          <div class="weather-row">
-            <div>
-              <span>Weather</span>
-              <strong id="weatherStat">Cold &amp; Dry</strong>
-            </div>
-            <div>
-              <span>Demand</span>
-              <strong id="weatherDemand">100%</strong>
-            </div>
-            <div>
-              <span>Admission yield</span>
-              <strong id="yieldStat">72%</strong>
-            </div>
+          <div class="environment-strip">
+            <div><span>Weather</span><strong id="weatherStat">Cold &amp; Dry</strong></div>
+            <div><span>Demand</span><strong id="weatherDemand">100%</strong></div>
+            <div><span>Yield</span><strong id="yieldStat">72%</strong></div>
           </div>
 
-          <div class="day-progress">
-            <div id="dayProgressFill"></div>
-          </div>
+          <div class="day-progress"><div id="dayProgressFill"></div></div>
 
-          <div class="live-grid">
-            <div class="live-tile">
-              <span>Guests in park</span>
+          <div class="big-live-stats">
+            <div class="big-stat">
+              <span>IN PARK</span>
               <strong id="guestsInPark">0</strong>
               <small id="arrivalRate">Waiting to open</small>
             </div>
-            <div class="live-tile">
-              <span>Revenue today</span>
+            <div class="big-stat">
+              <span>REVENUE</span>
               <strong id="liveRevenue">£0</strong>
               <small id="revenueRate">£0 / hour</small>
             </div>
-            <div class="live-tile">
-              <span>Costs today</span>
+            <div class="big-stat">
+              <span>COSTS</span>
               <strong id="liveCosts">£0</strong>
               <small>Operating + stock + debt</small>
             </div>
-            <div class="live-tile live-profit-tile">
-              <span>Live profit</span>
+            <div class="big-stat accent">
+              <span>PROFIT</span>
               <strong id="liveProfit">£0</strong>
               <small id="profitMargin">0% margin</small>
             </div>
           </div>
 
-          <div class="forecast-strip">
-            <div>
-              <span>Demand forecast</span>
-              <strong id="forecastDemand">0</strong>
-            </div>
-            <div>
-              <span>Profit forecast</span>
-              <strong id="forecastProfit">£0</strong>
-            </div>
-            <div>
-              <span>Park capacity</span>
-              <strong id="capacityKpi">0</strong>
-            </div>
-            <div>
-              <span>Fixed daily cost</span>
-              <strong id="fixedCostKpi">£0</strong>
-            </div>
+          <div class="forecast-cards">
+            <div><span>Forecast demand</span><strong id="forecastDemand">0</strong></div>
+            <div><span>Forecast profit</span><strong id="forecastProfit">£0</strong></div>
+            <div><span>Capacity</span><strong id="capacityKpi">0</strong></div>
+            <div><span>Fixed cost</span><strong id="fixedCostKpi">£0</strong></div>
           </div>
 
-          <div class="main-actions">
-            <button id="openCloseBtn" class="primary action-main">Open Park &amp; Start Day</button>
-            <button id="skipDayBtn" class="skip-day-btn" disabled>Skip to End</button>
-            <button id="speedBtn" class="secondary action-speed" disabled>Speed 1x</button>
+          <div class="control-deck">
+            <button id="openCloseBtn" class="game-action primary">Open Park &amp; Start Day</button>
+            <button id="skipDayBtn" class="game-action skip" disabled>Skip to End</button>
+            <button id="speedBtn" class="game-action secondary" disabled>Speed 1x</button>
           </div>
         </div>
 
-        <aside class="card health-card">
-          <div class="card-head">
-            <div>
-              <span class="eyebrow">BUSINESS HEALTH</span>
-              <h2>Executive snapshot</h2>
+        <aside class="side-stack">
+          <div class="mini-panel">
+            <span class="section-tag">BUSINESS HEALTH</span>
+            <h3>Company snapshot</h3>
+            <div class="snapshot-grid">
+              <div><span>Park value</span><strong id="parkValueKpi">£0</strong></div>
+              <div><span>Debt</span><strong id="debtKpi">£0</strong></div>
+              <div><span>Headroom</span><strong id="headroomKpi">£0</strong></div>
+              <div><span>Debt / day</span><strong id="debtServiceKpi">£0</strong></div>
+              <div><span>Staffing</span><strong id="staffCoverageKpi">0%</strong></div>
             </div>
-            <div class="health-orb"></div>
           </div>
 
-          <div class="overview-list executive-list">
-            <div><span>Park value</span><strong id="parkValueKpi">£0</strong></div>
-            <div><span>Debt</span><strong id="debtKpi">£0</strong></div>
-            <div><span>Borrowing headroom</span><strong id="headroomKpi">£0</strong></div>
-            <div><span>Debt service / day</span><strong id="debtServiceKpi">£0</strong></div>
-            <div><span>Staff coverage</span><strong id="staffCoverageKpi">0%</strong></div>
+          <div class="mini-panel live-log-panel">
+            <div class="panel-title-row">
+              <div>
+                <span class="section-tag">LIVE FEED</span>
+                <h3>Park activity</h3>
+              </div>
+              <span id="feedPulse" class="pulse-label">Waiting</span>
+            </div>
+            <div id="liveFeed" class="live-feed"></div>
           </div>
         </aside>
       </div>
 
-      <div class="overview-columns">
-        <div class="card feed-card">
-          <div class="card-head">
-            <div>
-              <span class="eyebrow">LIVE FEED</span>
-              <h2>Park activity</h2>
-            </div>
-            <span id="feedPulse" class="pulse-label">Waiting</span>
-          </div>
-          <div id="liveFeed" class="live-feed"></div>
-        </div>
-
-        <div class="card log-card">
-          <span class="eyebrow">MANAGEMENT LOG</span>
-          <h2>Recent decisions</h2>
-          <div id="activityFeed" class="activity-feed"></div>
-        </div>
+      <div class="wide-panel">
+        <span class="section-tag">MANAGEMENT LOG</span>
+        <h3>Recent decisions</h3>
+        <div id="activityFeed" class="activity-feed"></div>
       </div>
     </section>
 
     <section id="attractions" class="tab">
-      <div class="page-hero">
-        <span class="eyebrow">ASSET MANAGEMENT</span>
-        <h2>Your attractions</h2>
-        <p>Understand what each ride contributes before committing more capital.</p>
-      </div>
-
-      <div class="section-title">
+      <div class="screen-header attractions-header">
         <div>
-          <span class="eyebrow">OWNED ASSETS</span>
-          <h2>Operational portfolio</h2>
-          <p>Utilisation, condition, downtime and resale value in one place.</p>
+          <span>ASSET MANAGEMENT</span>
+          <h2>Attractions</h2>
+          <p>Operate, maintain and expand your ride portfolio.</p>
         </div>
       </div>
-      <div id="ownedAttractions" class="performance-grid"></div>
 
-      <div class="section-title build-title">
-        <div>
-          <span class="eyebrow">CAPITAL PROJECTS</span>
-          <h2>Attraction catalogue</h2>
-          <p>Construction takes time and duplicate rides produce diminishing returns.</p>
-        </div>
+      <div class="subhead">
+        <div><span class="section-tag">YOUR PARK</span><h3>Owned attractions</h3></div>
       </div>
-      <div id="attractionShop" class="shop-grid"></div>
+      <div id="ownedAttractions" class="asset-grid"></div>
+
+      <div class="subhead build-subhead">
+        <div><span class="section-tag">BUILD NEW</span><h3>Attraction catalogue</h3></div>
+      </div>
+      <div id="attractionShop" class="asset-grid shop-grid"></div>
     </section>
 
     <section id="food" class="tab">
-      <div class="page-hero">
-        <span class="eyebrow">SECONDARY SPEND</span>
-        <h2>Food &amp; retail</h2>
-        <p>Turn attendance into profitable spend without overbuilding capacity.</p>
-      </div>
-
-      <div class="section-title">
+      <div class="screen-header food-header">
         <div>
-          <span class="eyebrow">OWNED ASSETS</span>
-          <h2>Trading portfolio</h2>
-          <p>Track sales, margin, utilisation and resale value.</p>
+          <span>SECONDARY SPEND</span>
+          <h2>Food &amp; Retail</h2>
+          <p>Turn guest traffic into profitable spend.</p>
         </div>
       </div>
-      <div id="ownedOutlets" class="performance-grid"></div>
 
-      <div class="section-title build-title">
-        <div>
-          <span class="eyebrow">NEW INVESTMENT</span>
-          <h2>Food &amp; retail catalogue</h2>
-          <p>Outlets require fit-out time before they can begin trading.</p>
-        </div>
+      <div class="subhead">
+        <div><span class="section-tag">YOUR PARK</span><h3>Owned outlets</h3></div>
       </div>
-      <div id="outletShop" class="shop-grid"></div>
+      <div id="ownedOutlets" class="asset-grid"></div>
+
+      <div class="subhead build-subhead">
+        <div><span class="section-tag">BUY NEW</span><h3>Outlet catalogue</h3></div>
+      </div>
+      <div id="outletShop" class="asset-grid shop-grid"></div>
     </section>
 
     <section id="operations" class="tab">
-      <div class="page-hero">
-        <span class="eyebrow">PARK OPERATIONS</span>
-        <h2>Commercial control room</h2>
-        <p>Balance price, staffing and marketing without damaging guest demand.</p>
+      <div class="screen-header operations-header">
+        <div>
+          <span>CONTROL ROOM</span>
+          <h2>Operations</h2>
+          <p>Price, staff and market the park.</p>
+        </div>
       </div>
 
-      <div class="operations-grid">
-        <div class="card control-card pricing-card">
-          <span class="eyebrow">PRICING</span>
-          <h2>Guest pricing</h2>
+      <div class="operations-board">
+        <div class="control-panel">
+          <span class="section-tag">PRICING</span>
+          <h3>Guest pricing</h3>
 
-          <div class="range-control">
+          <div class="slider-block">
             <label>Adult ticket <strong id="ticketPriceLabel">£35</strong></label>
             <input id="ticketPrice" type="range" min="10" max="90" step="1">
           </div>
 
-          <div class="range-control">
+          <div class="slider-block">
             <label>Parking <strong id="parkingPriceLabel">£8</strong></label>
             <input id="parkingPrice" type="range" min="0" max="30" step="1">
           </div>
 
-          <div class="range-control">
+          <div class="slider-block">
             <label>Fast Track <strong id="fastTrackPriceLabel">£0</strong></label>
             <input id="fastTrackPrice" type="range" min="0" max="50" step="1">
           </div>
@@ -270,48 +225,50 @@
           <div id="pricingFeedback" class="feedback-box"></div>
         </div>
 
-        <div class="card control-card staffing-card">
-          <span class="eyebrow">STAFFING</span>
-          <h2>Workforce</h2>
+        <div class="control-panel">
+          <span class="section-tag">STAFFING</span>
+          <h3>Workforce</h3>
           <div id="staffCoverage" class="coverage-box"></div>
           <div id="staffControls"></div>
         </div>
       </div>
 
-      <div class="card marketing-card-wrap">
-        <span class="eyebrow">MARKETING</span>
-        <h2>Demand campaigns</h2>
+      <div class="wide-panel marketing-panel">
+        <span class="section-tag">MARKETING</span>
+        <h3>Campaigns</h3>
         <div id="marketingShop" class="marketing-grid"></div>
         <div id="activeMarketing" class="active-campaigns"></div>
       </div>
     </section>
 
     <section id="finance" class="tab">
-      <div class="page-hero">
-        <span class="eyebrow">FINANCE</span>
-        <h2>Funding &amp; performance</h2>
-        <p>Negotiate with the bank, manage leverage and track whether the business is genuinely improving.</p>
+      <div class="screen-header finance-header">
+        <div>
+          <span>FINANCIAL CONTROL</span>
+          <h2>Finance</h2>
+          <p>Funding, debt and trading performance.</p>
+        </div>
       </div>
 
-      <div class="finance-grid">
-        <div class="card finance-position-card">
-          <span class="eyebrow">FINANCIAL POSITION</span>
-          <h2>Company finances</h2>
+      <div class="finance-board">
+        <div class="control-panel finance-panel">
+          <span class="section-tag">POSITION</span>
+          <h3>Company finances</h3>
           <div id="financeStats" class="finance-list"></div>
         </div>
 
-        <div class="card bank-card">
-          <span class="eyebrow">BANK MANAGER</span>
-          <h2>Negotiate funding</h2>
+        <div class="control-panel bank-panel">
+          <span class="section-tag">BANK MANAGER</span>
+          <h3>Negotiate funding</h3>
           <div id="creditPanel" class="credit-panel"></div>
 
-          <label>Amount you want to borrow</label>
+          <label>Amount to borrow</label>
           <div class="borrow-input-row">
             <span>£</span>
             <input id="borrowAmountInput" type="number" min="10000" step="10000" value="250000" inputmode="numeric">
           </div>
 
-          <button id="requestLoanBtn" class="secondary full">Ask bank for funding</button>
+          <button id="requestLoanBtn" class="game-action secondary full">Ask bank for funding</button>
 
           <div id="bankConversation" class="bank-conversation">
             <div class="bank-message bank">
@@ -321,19 +278,15 @@
           </div>
 
           <div id="loanOfferBox" class="loan-offer hidden"></div>
-          <button id="acceptLoanBtn" class="primary full hidden">Accept bank offer</button>
-          <button id="declineLoanBtn" class="ghost full hidden">Decline offer</button>
-
-          <button id="repayBtn" class="ghost full">Repay £100k early</button>
+          <button id="acceptLoanBtn" class="game-action primary full hidden">Accept bank offer</button>
+          <button id="declineLoanBtn" class="game-action secondary full hidden">Decline offer</button>
+          <button id="repayBtn" class="game-action secondary full">Repay £100k early</button>
         </div>
       </div>
 
-      <div class="card report-card">
-        <div class="report-head">
-          <div>
-            <span class="eyebrow">TRADING REPORT</span>
-            <h2>Business performance</h2>
-          </div>
+      <div class="wide-panel report-panel">
+        <div class="panel-title-row">
+          <div><span class="section-tag">TRADING REPORT</span><h3>Business performance</h3></div>
           <span id="reportTrendBadge" class="trend-badge">NO DATA</span>
         </div>
 
@@ -358,28 +311,118 @@
             <tbody id="historyTable"></tbody>
           </table>
         </div>
-
-        <div id="emptyReportState" class="empty-report">
-          Complete your first trading day to generate the report.
-        </div>
+        <div id="emptyReportState" class="empty-report">Complete your first trading day to generate the report.</div>
       </div>
     </section>
   </main>
+
+  <nav class="mobile-dock">
+    <button data-tab="overview" class="active"><span>Overview</span></button>
+    <button data-tab="attractions"><span>Rides</span></button>
+    <button data-tab="food"><span>Shops</span></button>
+    <button data-tab="operations"><span>Ops</span></button>
+    <button data-tab="finance"><span>Finance</span></button>
+  </nav>
+</div>
+
+
+<div id="releaseModal" class="modal hidden">
+  <div class="modal-card release-modal-card">
+    <div class="release-modal-head">
+      <div>
+        <span class="section-tag">OFFICIAL RELEASE</span>
+        <h2>Park Empire v1.0</h2>
+        <p>Launch Build</p>
+      </div>
+      <button id="releaseCloseTop" class="release-close">Close</button>
+    </div>
+
+    <div class="release-hero">
+      <strong>Welcome to Park Empire</strong>
+      <span>Build, operate and grow a profitable theme park business.</span>
+    </div>
+
+    <div class="release-notes-grid">
+      <div>
+        <span>LIVE OPERATIONS</span>
+        <strong>10-minute trading days</strong>
+        <small>Watch guests arrive, revenue build, costs hit and park performance change live.</small>
+      </div>
+      <div>
+        <span>BUSINESS SIMULATION</span>
+        <strong>Demand, pricing &amp; profitability</strong>
+        <small>Guest demand reacts to price, weather, rating, attraction mix and marketing.</small>
+      </div>
+      <div>
+        <span>ATTRACTIONS</span>
+        <strong>Build, maintain &amp; sell rides</strong>
+        <small>Construction times, condition, breakdowns, depreciation and resale value.</small>
+      </div>
+      <div>
+        <span>FOOD &amp; RETAIL</span>
+        <strong>Own commercial assets</strong>
+        <small>Buy outlets, track sales, margins, customers and asset values.</small>
+      </div>
+      <div>
+        <span>FINANCE</span>
+        <strong>Negotiate with the bank</strong>
+        <small>Request custom borrowing amounts and receive approvals, counter-offers or declines.</small>
+      </div>
+      <div>
+        <span>RISK</span>
+        <strong>Real business pressure</strong>
+        <small>Debt service, weather, staffing, maintenance, compensation, losses and insolvency risk.</small>
+      </div>
+      <div>
+        <span>REPORTING</span>
+        <strong>Trading performance</strong>
+        <small>Track daily results, trends, cumulative guests, profit and best-performing days.</small>
+      </div>
+      <div>
+        <span>GAME CONTROLS</span>
+        <strong>Play at your pace</strong>
+        <small>1x, 2x and 4x speeds plus Skip to End of Day when you want a faster result.</small>
+      </div>
+    </div>
+
+    <div class="release-footer">
+      <span>Release</span>
+      <strong>v1.0 - Launch</strong>
+    </div>
+
+    <button id="releaseCloseBtn" class="game-action primary full">Back to game</button>
+  </div>
 </div>
 
 <div id="toast" class="toast"></div>
 
 <div id="dayModal" class="modal hidden">
   <div class="modal-card">
-    <span class="eyebrow">DAY COMPLETE</span>
+    <span class="section-tag">DAY COMPLETE</span>
     <h2 id="modalTitle">Trading result</h2>
     <div id="modalProfit" class="modal-profit"></div>
     <div id="modalStats" class="modal-stats"></div>
     <div id="modalEvent" class="modal-event"></div>
-    <button id="modalClose" class="primary full">Continue</button>
+    <button id="modalClose" class="game-action primary full">Continue</button>
   </div>
 </div>
 
 <script src="game.js"></script>
+<script>
+document.querySelectorAll('.mobile-dock button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.mobile-dock button').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.desktop-tabs button').forEach(x=>x.classList.toggle('active',x.dataset.tab===btn.dataset.tab));
+    document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.id===btn.dataset.tab));
+    btn.classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+document.querySelectorAll('.desktop-tabs button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.mobile-dock button').forEach(x=>x.classList.toggle('active',x.dataset.tab===btn.dataset.tab));
+  });
+});
+</script>
 </body>
 </html>
