@@ -366,3 +366,61 @@ th{font-size:6px;color:#7e92a2;background:#f5f9fb}
   .perf-grid{grid-template-columns:1fr 1fr}
   .report-summary{grid-template-columns:1fr 1fr}
 }
+
+/* =========================================================
+   v1.03.0 VISUAL LIFE UPDATE
+   Lightweight CSS/SVG park art. No image downloads required.
+   ========================================================= */
+.park-skyline{margin:12px -4px 4px;overflow:hidden;border-radius:14px}
+.park-skyline-scene{height:150px;position:relative;overflow:hidden;background:linear-gradient(180deg,#7fd4e9 0%,#bceaf1 62%,#8fd0b1 63%,#4d9a75 100%);border:1px solid rgba(255,255,255,.18)}
+.sky-sun{position:absolute;right:8%;top:16px;width:32px;height:32px;border-radius:50%;background:#ffe395;box-shadow:0 0 30px rgba(255,227,149,.65);animation:sunPulse 5s ease-in-out infinite}
+.sky-cloud{position:absolute;width:64px;height:17px;border-radius:20px;background:rgba(255,255,255,.72);filter:blur(.1px)}
+.sky-cloud:before,.sky-cloud:after{content:"";position:absolute;border-radius:50%;background:inherit}
+.sky-cloud:before{width:27px;height:27px;left:12px;top:-12px}.sky-cloud:after{width:34px;height:34px;right:8px;top:-17px}
+.sky-cloud.c1{top:28px;left:-70px;animation:cloudDrift 22s linear infinite}.sky-cloud.c2{top:58px;left:-100px;transform:scale(.7);opacity:.65;animation:cloudDrift 31s linear 6s infinite}
+.skyline-assets{position:absolute;inset:20px 4% 15px;display:flex;align-items:flex-end;justify-content:center;gap:0}
+.skyline-asset{width:18%;min-width:85px;max-width:170px;margin:0 -7px;transform-origin:bottom center;filter:drop-shadow(0 7px 4px rgba(12,63,72,.16))}
+.skyline-asset.s1{transform:scale(.82)}.skyline-asset.s2{transform:scale(1.08)}.skyline-asset.s3{transform:scale(.76)}.skyline-asset.s4{transform:scale(.94)}.skyline-asset.s5{transform:scale(.72)}
+.skyline-empty{align-self:center;padding:10px 14px;border-radius:10px;background:rgba(13,50,73,.58);color:#eafcff;font-size:8px;font-weight:800}
+.skyline-build{width:55px;height:65px;position:relative;margin-left:5px;border-left:3px solid #f2bf55;border-bottom:3px solid #f2bf55;opacity:.9}
+.skyline-build:before{content:"";position:absolute;width:50px;height:3px;left:-3px;top:4px;background:#f2bf55;transform:rotate(-18deg);transform-origin:left center}
+.skyline-build span{position:absolute;width:2px;height:45px;background:#f2bf55;right:4px;top:4px}.skyline-build b{position:absolute;bottom:5px;left:5px;font-size:7px;color:#fff;background:#9b6a19;padding:3px 5px;border-radius:5px}
+.skyline-ground{position:absolute;left:0;right:0;bottom:0;height:17px;background:linear-gradient(180deg,#4a976f,#347659)}
+.guest-stream{position:absolute;bottom:10px;left:6%;right:6%;height:24px;z-index:6;overflow:hidden}
+.guest-stream i{position:absolute;bottom:0;width:5px;height:9px;border-radius:4px 4px 2px 2px;background:#143c53;animation:guestWalk 9s linear infinite}.guest-stream i:before{content:"";position:absolute;left:1px;top:-4px;width:4px;height:4px;border-radius:50%;background:#ffd0ae}
+.guest-stream i:nth-child(1){left:2%;animation-delay:-2s}.guest-stream i:nth-child(2){left:18%;animation-delay:-6s}.guest-stream i:nth-child(3){left:45%;animation-delay:-4s}.guest-stream i:nth-child(4){left:67%;animation-delay:-8s}.guest-stream i:nth-child(5){left:82%;animation-delay:-1s}
+
+.ride-visual{height:112px;position:relative;overflow:hidden;margin:-13px -13px 11px;border-radius:14px 14px 9px 9px;background:linear-gradient(180deg,#9edff0 0%,#d9f3f5 67%,#73b78e 68%,#52966e 100%)}
+.ride-visual.mini{height:82px;margin:0;border-radius:8px;background:transparent;overflow:visible}
+.ride-visual svg{position:absolute;inset:8px 0 10px;width:100%;height:94%}.ride-visual .track{fill:none;stroke:#314b62;stroke-width:6;stroke-linecap:round}.ride-visual .supports{fill:none;stroke:#587186;stroke-width:2}
+.coaster-train{position:absolute;left:6%;top:69%;display:flex;gap:1px;animation:coasterRun 5s ease-in-out infinite}.coaster-train i{width:11px;height:7px;border-radius:4px 4px 2px 2px;background:#ed5c68;border-bottom:2px solid #8d2e3c}
+.launch .coaster-train{animation-duration:3.3s}.invert .coaster-train{animation-duration:4.1s}.hyper .coaster-train{animation-duration:4.7s}.giga .coaster-train{animation-duration:5.3s}
+.launch .track{stroke:#7055a8}.invert .track{stroke:#236b88}.hyper .track{stroke:#d06937}.giga .track{stroke:#254f86}
+
+.carousel-roof{position:absolute;left:50%;top:23px;transform:translateX(-50%);width:86px;height:27px;background:#e65d68;clip-path:polygon(50% 0,100% 100%,0 100%);z-index:3}.carousel-roof:after{content:"";position:absolute;left:7px;right:7px;bottom:0;height:6px;background:#ffd477}
+.carousel-pole{position:absolute;left:50%;top:44px;width:5px;height:52px;background:#f3d88c;transform:translateX(-50%)}.carousel-deck{position:absolute;left:50%;bottom:14px;width:98px;height:10px;border-radius:50%;background:#c94c5a;transform:translateX(-50%)}
+.carousel>i{position:absolute;top:52px;width:3px;height:42px;background:#f1d18a;transform-origin:top center;animation:horseBob 1.2s ease-in-out infinite}.carousel>i:after{content:"";position:absolute;width:15px;height:8px;left:-6px;top:21px;border-radius:7px 9px 4px 4px;background:#fff}.carousel>i:nth-of-type(1){left:37%}.carousel>i:nth-of-type(2){left:50%;animation-delay:-.4s}.carousel>i:nth-of-type(3){left:63%;animation-delay:-.8s}
+.dodgem-roof{position:absolute;left:12%;right:12%;top:24px;height:8px;background:#e15c65;border-radius:4px;box-shadow:0 5px 0 #f4ce65}.dodgem-roof:before,.dodgem-roof:after{content:"";position:absolute;top:7px;width:4px;height:58px;background:#446477}.dodgem-roof:before{left:3%}.dodgem-roof:after{right:3%}.dodgem-floor{position:absolute;left:13%;right:13%;bottom:15px;height:38px;transform:skewX(-10deg);background:#607b8c;border:4px solid #2f4d60}.dodgem-floor i{position:absolute;width:20px;height:11px;border-radius:8px 8px 3px 3px;background:#f2c24f;animation:dodge 2.8s ease-in-out infinite}.dodgem-floor i:nth-child(1){left:10%;top:6px}.dodgem-floor i:nth-child(2){left:52%;top:17px;background:#e95c6a;animation-delay:-1s}.dodgem-floor i:nth-child(3){left:74%;top:3px;background:#43b8c7;animation-delay:-2s}
+.drop-tower{position:absolute;left:50%;top:10px;bottom:13px;width:7px;background:#3f596d;transform:translateX(-50%)}.drop-tower:before{content:"";position:absolute;left:-19px;top:0;width:45px;height:5px;background:#f1bf50}.drop-car{position:absolute;left:50%;top:30px;width:42px;height:10px;border-radius:4px;background:#e45765;transform:translateX(-50%);animation:dropRide 3.6s cubic-bezier(.6,.05,.3,1) infinite}.drop-base{position:absolute;left:50%;bottom:10px;width:54px;height:7px;border-radius:50%;background:#2e6d55;transform:translateX(-50%)}
+.rapids .water{position:absolute;left:-5%;right:-5%;bottom:12px;height:48px;border-radius:50%;border:11px solid #50b6db;background:#6fc7e1}.rapid-rock{position:absolute;width:27px;height:20px;border-radius:50% 50% 35% 40%;background:#8c806f;bottom:30px}.rapid-rock.r1{left:25%}.rapid-rock.r2{right:22%;transform:scale(.75)}.raft{position:absolute;left:18%;bottom:31px;width:35px;height:14px;border-radius:50%;background:#e9a83e;border:4px solid #9b5d1d;animation:raftFloat 5s linear infinite}.raft i{position:absolute;top:-5px;width:5px;height:5px;border-radius:50%;background:#263f52}.raft i:nth-child(1){left:4px}.raft i:nth-child(2){left:12px}.raft i:nth-child(3){left:20px}
+.manor{position:absolute;left:25%;right:25%;bottom:12px;height:66px;background:#463f62;clip-path:polygon(10% 25%,25% 25%,25% 12%,40% 12%,50% 0,60% 12%,75% 12%,75% 25%,90% 25%,90% 100%,10% 100%)}.manor i{position:absolute;width:8px;height:12px;background:#ffd971;box-shadow:0 0 8px #ffd971}.manor i:nth-child(1){left:26%;top:44%}.manor i:nth-child(2){left:48%;top:30%}.manor i:nth-child(3){right:25%;top:44%}.manor b{position:absolute;left:43%;bottom:0;width:14px;height:22px;background:#1c2237}.moon{position:absolute;right:18%;top:16px;width:24px;height:24px;border-radius:50%;background:#fff1bb;box-shadow:0 0 20px rgba(255,241,187,.7)}
+
+.outlet-visual{height:112px;position:relative;overflow:hidden;margin:-13px -13px 11px;border-radius:14px 14px 9px 9px;background:linear-gradient(180deg,#a6dfef 0%,#e0f3f3 68%,#79b88e 69%,#579870 100%)}
+.store{position:absolute;left:20%;right:20%;bottom:13px;height:67px;border-radius:5px 5px 2px 2px;background:#f5e7d1;border:3px solid #47677a}.awning{position:absolute;left:-3px;right:-3px;top:19px;height:13px;background:repeating-linear-gradient(90deg,#e85c66 0 15px,#fff1d9 15px 30px);clip-path:polygon(0 0,100% 0,96% 100%,4% 100%)}.sign{position:absolute;left:4px;right:4px;top:3px;text-align:center;font-size:7px;font-weight:950;color:#24465a;letter-spacing:.5px}.door{position:absolute;left:16%;bottom:0;width:18px;height:27px;background:#31566b}.window{position:absolute;right:13%;bottom:7px;width:31px;height:21px;background:#77c7db;border:3px solid #fff}.outlet-icon{position:absolute;right:13%;top:16px;width:31px;height:31px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#d65a66;font-size:16px;font-weight:950;box-shadow:0 4px 10px rgba(32,75,92,.14)}
+.burger .store{background:#f3d282}.burger .awning{background:repeating-linear-gradient(90deg,#d95158 0 15px,#f4c65f 15px 30px)}.shop .store{background:#d7d1ee}.shop .awning{background:repeating-linear-gradient(90deg,#6758a4 0 15px,#f0e9ff 15px 30px)}.icecream .store{background:#f5d6e6}.icecream .awning{background:repeating-linear-gradient(90deg,#eb8eb5 0 15px,#fff 15px 30px)}.restaurant .store,.premium .store{left:12%;right:12%;background:#eadcc8}.premium .store{background:#d9d7d2;border-color:#2f4656}
+
+.weather-icon{display:inline-block;width:18px;height:14px;position:relative;vertical-align:middle;margin-right:5px}.weather-icon.sun i{position:absolute;width:12px;height:12px;border-radius:50%;background:#ffd65e;box-shadow:0 0 0 2px rgba(255,214,94,.2);left:2px;top:0}.weather-icon.cloud i,.weather-icon.rain i,.weather-icon.cool i{position:absolute;left:1px;top:5px;width:16px;height:8px;border-radius:10px;background:#dceaf0}.weather-icon.cloud i:before,.weather-icon.rain i:before,.weather-icon.cool i:before{content:"";position:absolute;left:3px;top:-5px;width:8px;height:8px;border-radius:50%;background:inherit}.weather-icon.rain:after{content:"···";position:absolute;left:2px;top:7px;color:#62b8dc;letter-spacing:2px;font-weight:950}
+#weatherStat{display:flex;align-items:center}
+
+.performance-card,.shop-card{overflow:hidden;transition:transform .18s ease,box-shadow .18s ease}.performance-card:active,.shop-card:active{transform:scale(.995)}
+
+@keyframes coasterRun{0%{left:4%;top:70%;transform:rotate(-10deg)}25%{left:24%;top:27%;transform:rotate(-3deg)}48%{left:44%;top:66%;transform:rotate(10deg)}72%{left:65%;top:16%;transform:rotate(-4deg)}100%{left:92%;top:63%;transform:rotate(8deg)}}
+@keyframes horseBob{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+@keyframes dodge{0%,100%{transform:translate(0,0) rotate(-6deg)}50%{transform:translate(20px,8px) rotate(12deg)}}
+@keyframes dropRide{0%,18%{top:30px}40%{top:16px}52%{top:16px}68%{top:79px}100%{top:30px}}
+@keyframes raftFloat{0%{left:15%;transform:rotate(-5deg)}50%{left:68%;transform:rotate(8deg)}100%{left:15%;transform:rotate(-5deg)}}
+@keyframes cloudDrift{from{left:-100px}to{left:110%}}
+@keyframes sunPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes guestWalk{0%{transform:translateX(-30px)}100%{transform:translateX(130px)}}
+@media(prefers-reduced-motion:reduce){.coaster-train,.carousel>i,.dodgem-floor i,.drop-car,.raft,.sky-cloud,.sky-sun,.guest-stream i{animation:none!important}}
+@media(max-width:760px){.park-skyline-scene{height:125px}.ride-visual,.outlet-visual{height:102px}.skyline-asset{min-width:75px}.skyline-assets{left:0;right:0}.park-skyline{margin-top:10px}}
