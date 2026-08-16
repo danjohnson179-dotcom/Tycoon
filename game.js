@@ -1,3 +1,4 @@
+/* Park Empire v9 - Resort UI + Skip to End of Day */
 /* Park Empire v8 visual overhaul - gameplay model preserved from v7.6 */
 const SAVE_KEY="parkEmpireV76";
 const money=n=>new Intl.NumberFormat("en-GB",{style:"currency",currency:"GBP",maximumFractionDigits:0}).format(Math.round(n||0));
@@ -80,6 +81,7 @@ function newState(){
 
 let state=load()||newState();
 let timer=null;
+let fastForwarding=false;
 
 function load(){
   try{
@@ -350,6 +352,29 @@ function liveTick(){
 
   L.tick++;
   if(L.tick>=L.totalTicks){finishDay();return;}
+  if(!fastForwarding)render();
+}
+
+
+function skipToEndDay(){
+  if(!state.live.running)return toast("Open the park before skipping the day.");
+
+  if(!confirm("Skip to the end of this trading day? The remaining hours will be simulated instantly using the same trading and incident logic."))return;
+
+  if(timer){
+    clearInterval(timer);
+    timer=null;
+  }
+
+  fastForwarding=true;
+  let safety=0;
+
+  while(state.live.running && safety<500){
+    liveTick();
+    safety++;
+  }
+
+  fastForwarding=false;
   render();
 }
 
@@ -844,6 +869,7 @@ function render(){
   document.getElementById("capacityKpi").textContent=capacity().toLocaleString();
   document.getElementById("fixedCostKpi").textContent=money(fixedCosts()+debtServiceDaily());
   document.getElementById("openCloseBtn").textContent=L.running?"Close Park Early":"Open Park & Start Day";
+  document.getElementById("skipDayBtn").disabled=!L.running;
   document.getElementById("speedBtn").disabled=!L.running;document.getElementById("speedBtn").textContent=`Speed ${state.speed}x`;
   document.getElementById("feedPulse").textContent=L.running?"LIVE":"Waiting";document.getElementById("feedPulse").className=`pulse-label ${L.running?"live":""}`;
   document.getElementById("liveFeed").innerHTML=L.feed.length?L.feed.map(x=>`<div class="feed-item"><div class="feed-time">${x.time}</div><div><strong>${x.title}</strong><small>${x.detail}</small></div></div>`).join(""):`<div class="muted">Open the park to start the live feed.</div>`;
@@ -1012,6 +1038,7 @@ document.querySelectorAll(".tabs button").forEach(btn=>btn.addEventListener("cli
 }));
 
 document.getElementById("openCloseBtn").onclick=()=>state.live.running?closeEarly():startDay();
+document.getElementById("skipDayBtn").onclick=skipToEndDay;
 document.getElementById("speedBtn").onclick=toggleSpeed;
 document.getElementById("saveBtn").onclick=()=>save(true);
 document.getElementById("resetBtn").onclick=resetGame;
