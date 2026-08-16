@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#071b2a">
+  <meta name="theme-color" content="#081d2b">
   <title>Park Empire Admin</title>
   <link rel="stylesheet" href="admin.css">
 </head>
@@ -13,7 +13,7 @@
     <div class="admin-logo">PE</div>
     <span>PRIVATE QA TOOL</span>
     <h1>Park Empire Admin</h1>
-    <p>This is a client-side testing console. The password is a convenience gate, not strong security on a public static site.</p>
+    <p>Local testing console for diagnostics and economy stress testing.</p>
     <input id="passwordInput" type="password" inputmode="numeric" placeholder="Admin password">
     <button id="loginBtn">Unlock Admin</button>
     <div id="loginError"></div>
@@ -22,14 +22,14 @@
 </div>
 
 <div id="adminApp" class="admin-app hidden">
-  <header>
+  <header class="admin-header">
     <div>
       <span>QA / DIAGNOSTICS</span>
       <h1>Park Empire Admin</h1>
-      <p>v1.01.0 testing console</p>
+      <p>v1.02.0 testing console</p>
     </div>
-    <div class="header-actions">
-      <a href="index.html">Open Game</a>
+    <div class="admin-header-actions">
+      <a href="index.html">Game</a>
       <button id="refreshBtn">Refresh</button>
       <button id="logoutBtn">Lock</button>
     </div>
@@ -37,85 +37,134 @@
 
   <main>
     <section class="summary-grid">
-      <div><span>Save detected</span><strong id="saveDetected">No</strong></div>
+      <div><span>Save</span><strong id="saveDetected">No</strong></div>
       <div><span>Difficulty</span><strong id="adminDifficulty">-</strong></div>
-      <div><span>Cash</span><strong id="adminCash">&pound;0</strong></div>
-      <div><span>Park day</span><strong id="adminDay">0</strong></div>
+      <div><span>Cash</span><strong id="adminCash">GBP 0</strong></div>
+      <div><span>Day</span><strong id="adminDay">0</strong></div>
       <div><span>Rides</span><strong id="adminRides">0</strong></div>
       <div><span>Outlets</span><strong id="adminOutlets">0</strong></div>
     </section>
 
-    <div class="admin-grid">
-      <section class="panel">
-        <div class="panel-head"><div><span>TEST CONTROLS</span><h2>Game manipulation</h2></div></div>
+    <nav class="admin-tabs">
+      <button class="active" data-admin-tab="controls">Controls</button>
+      <button data-admin-tab="simulation">Simulation</button>
+      <button data-admin-tab="data">Local Data</button>
+      <button data-admin-tab="performance">Performance</button>
+    </nav>
 
-        <h3>Cash</h3>
-        <div class="button-grid">
-          <button data-cash="100000">+ &pound;100k</button>
-          <button data-cash="1000000">+ &pound;1m</button>
-          <button data-cash="10000000">+ &pound;10m</button>
-          <button id="clearDebtBtn">Clear Debt</button>
+    <section id="controls" class="admin-tab active">
+      <div class="panel">
+        <div class="panel-head">
+          <div><span>GAME MANIPULATION</span><h2>Testing controls</h2></div>
+          <small>Changes write directly to this device's local save.</small>
         </div>
 
-        <h3>Assets</h3>
-        <div class="button-grid">
-          <button id="completeRidesBtn">Complete Construction</button>
-          <button id="repairRidesBtn">Repair All Rides</button>
-          <button id="addAllRidesBtn">Add One of Every Ride</button>
-          <button id="addAllOutletsBtn">Add One of Every Outlet</button>
+        <div class="control-groups">
+          <div class="control-group">
+            <h3>Cash &amp; Debt</h3>
+            <div class="button-grid">
+              <button data-cash="100000">Add GBP 100k</button>
+              <button data-cash="1000000">Add GBP 1m</button>
+              <button data-cash="10000000">Add GBP 10m</button>
+              <button id="clearDebtBtn">Clear Debt</button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h3>Assets</h3>
+            <div class="button-grid">
+              <button id="completeRidesBtn">Complete Construction</button>
+              <button id="repairRidesBtn">Repair All Rides</button>
+              <button id="addAllRidesBtn">Add Every Ride</button>
+              <button id="addAllOutletsBtn">Add Every Outlet</button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h3>Guests &amp; Reputation</h3>
+            <div class="button-grid">
+              <button data-guests="1000">+1,000 Next-Day Guests</button>
+              <button data-guests="10000">+10,000 Next-Day Guests</button>
+              <button id="maxRatingBtn">Max Rating</button>
+              <button id="maxReputationBtn">Max Reputation</button>
+            </div>
+          </div>
         </div>
 
-        <h3>Guests / reputation</h3>
-        <div class="button-grid">
-          <button data-guests="1000">+1,000 Next-Day Guests</button>
-          <button data-guests="10000">+10,000 Next-Day Guests</button>
-          <button id="maxRatingBtn">Max Rating</button>
-          <button id="maxReputationBtn">Max Reputation</button>
-        </div>
-
-        <p class="hint">Changes are written to the local save. Reload the game tab after using admin controls.</p>
         <div id="adminActionLog" class="action-log">No admin changes yet.</div>
-      </section>
+      </div>
+    </section>
 
-      <section class="panel">
-        <div class="panel-head"><div><span>ECONOMY LAB</span><h2>365-day simulation</h2></div></div>
-        <p class="hint">Runs a fast model from the current save without changing the real save. It uses the current rides, outlets, prices, debt and selected difficulty.</p>
+    <section id="simulation" class="admin-tab">
+      <div class="panel">
+        <div class="panel-head">
+          <div><span>ECONOMY LAB</span><h2>365-day simulation</h2></div>
+          <small>Runs from the current save without changing it.</small>
+        </div>
+
         <div class="sim-controls">
-          <label>Runs
+          <label>Scenarios
             <select id="simRuns">
-              <option value="1">1 year</option>
-              <option value="10" selected>10 years / scenarios</option>
-              <option value="50">50 scenarios</option>
+              <option value="1">1</option>
+              <option value="10" selected>10</option>
+              <option value="50">50</option>
             </select>
           </label>
-          <button id="runYearBtn">Run Diagnostic</button>
+          <button id="runYearBtn">Run 365-Day Diagnostic</button>
         </div>
+
         <div id="simulationSummary" class="simulation-summary">No simulation run yet.</div>
+
         <div class="table-wrap">
           <table>
             <thead><tr><th>Metric</th><th>Average</th><th>Best</th><th>Worst</th></tr></thead>
             <tbody id="simulationTable"></tbody>
           </table>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="panel">
-        <div class="panel-head"><div><span>LOCAL DATA</span><h2>What this device holds</h2></div></div>
+    <section id="data" class="admin-tab">
+      <div class="panel">
+        <div class="panel-head">
+          <div><span>LOCAL DATA</span><h2>What this device holds</h2></div>
+          <small>No remote-player data is available without a backend.</small>
+        </div>
+
         <div id="storageSummary" class="diagnostic-list"></div>
-        <button id="exportSaveBtn">Export Save JSON</button>
-        <button id="copySaveBtn">Copy Save JSON</button>
-        <pre id="savePreview"></pre>
-      </section>
 
-      <section class="panel">
-        <div class="panel-head"><div><span>PERFORMANCE</span><h2>Browser diagnostics</h2></div></div>
+        <div class="button-row">
+          <button id="exportSaveBtn">Export Save JSON</button>
+          <button id="copySaveBtn">Copy Save JSON</button>
+        </div>
+
+        <pre id="savePreview"></pre>
+      </div>
+    </section>
+
+    <section id="performance" class="admin-tab">
+      <div class="panel">
+        <div class="panel-head">
+          <div><span>PERFORMANCE</span><h2>Browser diagnostics</h2></div>
+          <small>Local browser/device information only.</small>
+        </div>
+
         <div id="performanceDiagnostics" class="diagnostic-list"></div>
-        <button id="benchmarkBtn">Run JS Benchmark</button>
+        <button id="benchmarkBtn">Run JavaScript Benchmark</button>
         <div id="benchmarkResult" class="benchmark-result">Benchmark not run.</div>
-      </section>
-    </div>
+      </div>
+    </section>
   </main>
 </div>
 <script src="admin.js"></script>
+<script>
+document.querySelectorAll('.admin-tabs button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.admin-tabs button').forEach(x=>x.classList.toggle('active',x===btn));
+    document.querySelectorAll('.admin-tab').forEach(x=>x.classList.toggle('active',x.id===btn.dataset.adminTab));
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+</script>
 </body>
 </html>
