@@ -424,3 +424,162 @@ th{font-size:6px;color:#7e92a2;background:#f5f9fb}
 @keyframes guestWalk{0%{transform:translateX(-30px)}100%{transform:translateX(130px)}}
 @media(prefers-reduced-motion:reduce){.coaster-train,.carousel>i,.dodgem-floor i,.drop-car,.raft,.sky-cloud,.sky-sun,.guest-stream i{animation:none!important}}
 @media(max-width:760px){.park-skyline-scene{height:125px}.ride-visual,.outlet-visual{height:102px}.skyline-asset{min-width:75px}.skyline-assets{left:0;right:0}.park-skyline{margin-top:10px}}
+
+
+/* =========================================================
+   v1.04.0 - PROFESSIONAL 3D RENDER LAYER
+   ========================================================= */
+
+.ride-visual,
+.outlet-visual{
+  display:none !important;
+}
+
+.ride-visual-3d{
+  position:relative;
+  height:190px;
+  margin:-13px -13px 13px;
+  overflow:hidden;
+  border-radius:15px 15px 11px 11px;
+  background:#071b29;
+  border-bottom:1px solid rgba(16,44,64,.12);
+  isolation:isolate;
+}
+
+.ride-visual-3d.mini{
+  height:94px;
+  margin:0;
+  border-radius:10px;
+}
+
+.ride-visual-3d::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.08),transparent 20%),
+    linear-gradient(0deg,rgba(4,17,27,.18),transparent 35%);
+  z-index:2;
+}
+
+.park3d-canvas{
+  display:block;
+  width:100%;
+  height:100%;
+  background:#091e2d;
+}
+
+.render-badge,
+.park-render-label{
+  position:absolute;
+  z-index:4;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 7px;
+  border-radius:999px;
+  background:rgba(5,22,34,.68);
+  border:1px solid rgba(255,255,255,.12);
+  color:rgba(238,248,252,.84);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  font-size:6px;
+  font-weight:900;
+  letter-spacing:.65px;
+  pointer-events:none;
+}
+
+.render-badge{
+  top:9px;
+  right:9px;
+}
+
+.render-badge span,
+.park-render-label span{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#5de0c4;
+  box-shadow:0 0 9px rgba(93,224,196,.85);
+  animation:park3dPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes park3dPulse{
+  50%{opacity:.35;transform:scale(.7)}
+}
+
+.park-skyline{
+  margin:13px -3px 5px;
+  overflow:hidden;
+  border-radius:15px;
+  background:#071b29;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+}
+
+.park-3d-overview{
+  position:relative;
+  height:225px;
+  overflow:hidden;
+  border-radius:15px;
+  background:#071b29;
+}
+
+.park3d-overview-canvas{
+  width:100%;
+  height:100%;
+}
+
+.park-render-label{
+  left:11px;
+  bottom:10px;
+}
+
+.weather-chip{
+  display:inline-flex;
+  margin-left:5px;
+  padding:2px 5px;
+  border-radius:999px;
+  background:rgba(255,255,255,.10);
+  color:#dff4fb;
+  font-size:6px;
+  font-weight:900;
+}
+
+.performance-card,
+.shop-card{
+  overflow:hidden;
+}
+
+.performance-card:has(.ride-visual-3d),
+.shop-card:has(.ride-visual-3d){
+  padding-top:13px;
+}
+
+@media(max-width:760px){
+  .ride-visual-3d{
+    height:170px;
+  }
+  .ride-visual-3d.mini{
+    height:82px;
+  }
+  .park-3d-overview{
+    height:180px;
+  }
+}
+
+@media(max-width:430px){
+  .ride-visual-3d{
+    height:160px;
+  }
+  .park-3d-overview{
+    height:165px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .render-badge span,
+  .park-render-label span{
+    animation:none;
+  }
+}
