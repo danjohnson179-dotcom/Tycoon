@@ -1,3 +1,4 @@
+/* Park Empire v8 visual overhaul - gameplay model preserved from v7.6 */
 const SAVE_KEY="parkEmpireV76";
 const money=n=>new Intl.NumberFormat("en-GB",{style:"currency",currency:"GBP",maximumFractionDigits:0}).format(Math.round(n||0));
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
