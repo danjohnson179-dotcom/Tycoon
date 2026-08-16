@@ -182,3 +182,108 @@ main{padding:12px 12px 92px}.game-board{grid-template-columns:1fr}.park-panel{pa
 @media(max-width:560px){
   .release-notes-grid{grid-template-columns:1fr}
 }
+
+
+.admin-link{
+  text-decoration:none;
+  display:inline-grid;
+  place-items:center;
+}
+.difficulty-strip{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 18px;
+  background:#eef7fb;
+  border-bottom:1px solid var(--line);
+  font-size:8px;
+}
+.difficulty-strip span{
+  color:#7c92a3;
+  font-weight:850;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+}
+.difficulty-strip strong{
+  padding:4px 8px;
+  border-radius:99px;
+  background:#103b56;
+  color:#fff;
+  font-size:8px;
+}
+.difficulty-strip small{
+  color:#778f9f;
+}
+.difficulty-modal-card{
+  width:min(620px,100%);
+}
+.difficulty-intro{
+  margin:0 0 12px;
+  color:#71899b;
+  font-size:9px;
+  line-height:1.5;
+}
+.difficulty-options{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+}
+.difficulty-choice{
+  text-align:left;
+  min-height:170px;
+  padding:13px;
+  border-radius:14px;
+  border:2px solid #dae7ee;
+  background:#f7fbfd;
+  color:#18384d;
+  transition:.16s ease;
+}
+.difficulty-choice.selected{
+  border-color:#2d82e8;
+  background:#edf7ff;
+  box-shadow:0 8px 22px rgba(45,130,232,.13);
+}
+.difficulty-choice.easy.selected{border-color:#18b49a;background:#ecfaf6}
+.difficulty-choice.hard.selected{border-color:#df5d6d;background:#fdf0f2}
+.difficulty-choice-head{
+  display:flex;
+  justify-content:space-between;
+  gap:7px;
+  align-items:center;
+}
+.difficulty-choice-head strong{font-size:15px}
+.difficulty-choice-head span{
+  padding:4px 6px;
+  border-radius:99px;
+  background:#e6eef3;
+  color:#637c8d;
+  font-size:6px;
+  font-weight:950;
+  text-transform:uppercase;
+}
+.difficulty-choice p{
+  margin:9px 0;
+  min-height:54px;
+  color:#6e8799;
+  font-size:8px;
+  line-height:1.45;
+}
+.difficulty-stats{
+  display:grid;
+  gap:4px;
+}
+.difficulty-stats span{
+  padding:5px 6px;
+  border-radius:7px;
+  background:#fff;
+  border:1px solid #e1ebf0;
+  color:#536f81;
+  font-size:7px;
+  font-weight:800;
+}
+@media(max-width:640px){
+  .difficulty-options{grid-template-columns:1fr}
+  .difficulty-choice{min-height:0}
+  .difficulty-choice p{min-height:0}
+  .difficulty-strip small{display:none}
+}
