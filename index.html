@@ -7,6 +7,14 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Park Empire</title>
   <link rel="stylesheet" href="styles.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/"
+  }
+}
+</script>
 </head>
 <body>
 <div id="app">
@@ -16,7 +24,7 @@
       <div class="brandcopy">
         <div class="brand-title-row">
           <h1>Park Empire</h1>
-          <button id="versionBtn" class="version-badge">v1.05.0</button>
+          <button id="versionBtn" class="version-badge">v1.06.0</button>
         </div>
         <p>Theme Park Business Simulator</p>
       </div>
@@ -364,18 +372,18 @@
 <div id="releaseModal" class="modal hidden">
   <div class="modal-card release-modal-card">
     <div class="panel-head">
-      <div><span class="eyebrow">RELEASE</span><h2>Park Empire v1.05.0</h2></div>
+      <div><span class="eyebrow">RELEASE</span><h2>Park Empire v1.06.0</h2></div>
       <button id="releaseCloseTop" class="panel-btn compact-btn">Close</button>
     </div>
     <div class="release-hero">
-      <strong>PixiJS World Integration</strong>
-      <span>The park world is now rendered by PixiJS through WebGL and connected directly to your real Park Empire save.</span>
+      <strong>Three.js Premium Park</strong>
+      <span>The park is now a detailed Three.js WebGL world with PBR materials, animated rides, guests, weather, lighting and post-processing.</span>
     </div>
     <div class="release-notes-grid">
       <div><span>DIFFICULTY</span><strong>Easy / Medium / Hard</strong><small>Economy, demand, costs, incidents and lending adapt to the selected mode.</small></div>
       <div><span>ADMIN</span><strong>QA console</strong><small>Local save manipulation, economic simulation and browser/device diagnostics.</small></div>
-      <div><span>WEBGL WORLD</span><strong>PixiJS park renderer</strong><small>Your actual owned rides, outlets, construction and guest traffic are rendered in a live isometric game world.</small></div>
-      <div><span>CAMERA</span><strong>Pan, zoom &amp; parallax</strong><small>Smooth inertial camera movement, high-DPI rendering, depth sorting, weather and animated park life.</small></div>
+      <div><span>THREE.JS WORLD</span><strong>Premium isometric 3D park</strong><small>PBR attractions, terrain, animated guests, lighting, weather, shadows and a live day/night cycle.</small></div>
+      <div><span>RENDERING</span><strong>Post-processing &amp; performance</strong><small>Soft shadows, SSAO, bloom, vignette, subtle chromatic aberration, instancing and adaptive quality.</small></div>
     </div>
     <button id="releaseCloseBtn" class="panel-btn primary-btn">Back to game</button>
   </div>
@@ -395,7 +403,8 @@
 </div>
 
 <script src="game.js"></script>
-<script type="module" src="pixi-world.js"></script>
+<script type="module" src="three-world.js"></script>
+
 <script>
 document.querySelectorAll('.mobile-dock button').forEach(btn=>{
   btn.addEventListener('click',()=>{

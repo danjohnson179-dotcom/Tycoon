@@ -84,10 +84,10 @@ function weatherIcon(name){
 }
 
 function parkSkyline(){
-  return `<div class="pixi-park-shell">
-    <div id="pixiParkMount" class="pixi-park-mount" aria-label="Interactive WebGL park world"></div>
-    <div class="pixi-world-label"><span></span> LIVE WEBGL PARK</div>
-    <div class="pixi-world-help">Drag to pan · Pinch / wheel to zoom</div>
+  return `<div class="three-park-shell">
+    <div id="threeParkMount" class="three-park-mount" aria-label="Interactive WebGL park world"></div>
+    <div class="three-world-label"><span></span> LIVE THREE.JS PARK</div>
+    <div class="three-world-help">Drag to pan · Pinch / wheel to zoom</div>
   </div>`;
 }
 
@@ -96,6 +96,8 @@ function parkWorldSnapshot(){
     version:1,
     day:state.day,
     running:state.live.running,
+    liveTick:state.live.tick||0,
+    totalTicks:state.live.totalTicks||1,
     guestsInPark:state.live.guestsInPark||0,
     guestsToday:state.live.guestsToday||0,
     weather:state.live.weather?.name||"Overcast",
@@ -1061,11 +1063,11 @@ function render(){
   document.getElementById("staffCoverageKpi").textContent=`${Math.round(staffingScore()*100)}%`;
   document.getElementById("activityFeed").innerHTML=state.activity.map(a=>`<div class="activity-item"><div class="activity-dot"></div><div><strong>${a.title}</strong><small>${a.detail}</small></div></div>`).join("");
   const skyline=document.getElementById("parkSkyline");
-  if(skyline&&!skyline.dataset.pixiMounted){
+  if(skyline&&!skyline.dataset.threeMounted){
     skyline.innerHTML=parkSkyline();
-    skyline.dataset.pixiMounted="1";
+    skyline.dataset.threeMounted="1";
   }
-  if(window.ParkEmpirePixiWorld)window.ParkEmpirePixiWorld.sync(parkWorldSnapshot());
+  if(window.ParkEmpireThreeWorld)window.ParkEmpireThreeWorld.sync(parkWorldSnapshot());
 
   let warning="";
   if(state.bankrupt)warning="BANKRUPTCY: the company can no longer meet its obligations.";
