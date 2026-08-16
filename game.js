@@ -1,4 +1,4 @@
-const SAVE_KEY="parkEmpireV75";
+const SAVE_KEY="parkEmpireV76";
 const money=n=>new Intl.NumberFormat("en-GB",{style:"currency",currency:"GBP",maximumFractionDigits:0}).format(Math.round(n||0));
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 const rand=(a,b)=>Math.random()*(b-a)+a;
@@ -58,7 +58,7 @@ function blankLive(){
 
 function newState(){
   return{
-    version:75,day:1,cash:1500000,debt:0,negativeDays:0,parkOpen:false,
+    version:76,day:1,cash:1500000,debt:0,negativeDays:0,parkOpen:false,
     rating:3.2,reputation:50,satisfaction:72,
     ticketPrice:32,parkingPrice:7,fastTrackPrice:0,
     rides:[{uid:1,id:"carousel",condition:100,daysLeft:0,down:false,ageDays:120}],
@@ -73,7 +73,7 @@ function newState(){
     ],
     live:blankLive(),
     lastDay:{guests:0,revenue:0,costs:0,debtService:0,profit:0,demand:0,rideStats:{},outletStats:{}},
-    history:[],bankrupt:false,speed:1
+    history:[],bankrupt:false,speed:1,pendingLoanOffer:null
   };
 }
 
@@ -83,8 +83,8 @@ let timer=null;
 function load(){
   try{
     const s=JSON.parse(localStorage.getItem(SAVE_KEY));
-    if(!s||s.version!==75)return null;
-    s.live=blankLive();s.parkOpen=false;
+    if(!s||s.version!==76)return null;
+    s.live=blankLive();s.parkOpen=false;if(typeof s.pendingLoanOffer==="undefined")s.pendingLoanOffer=null;
     return s;
   }catch{return null;}
 }
@@ -581,11 +581,204 @@ function changeStaff(k,d){
   state.staff[k]=Math.max(0,state.staff[k]+d);save();render();
 }
 
+
+function recentProfitabilityScore(){
+  if(!state.history.length)return .45;
+  const sample=state.history.slice(0,7);
+  const avg=sample.reduce((s,x)=>s+x.profit,0)/sample.length;
+  const revenueAvg=Math.max(1,sample.reduce((s,x)=>s+x.revenue,0)/sample.length);
+  return clamp(.5 + (avg/revenueAvg)*1.4, .05, 1);
+}
+
+function bankRiskScore(){
+  const gross=Math.max(1,parkValueGross());
+  const leverage=state.debt/gross;
+  const liquidity=clamp(state.cash/Math.max(250000,fixedCosts()*30),0,1);
+  const profitability=recentProfitabilityScore();
+  const lossPenalty=clamp(state.negativeDays/5,0,.7);
+
+  return clamp(
+    .38
+    + profitability*.30
+    + liquidity*.16
+    + clamp(1-leverage,0,1)*.22
+    - lossPenalty,
+    .05,1
+  );
+}
+
+function bankManagerResponse(requested){
+  requested=Math.max(0,Math.round(requested/10000)*10000);
+
+  const headroom=Math.floor(borrowingHeadroom()/10000)*10000;
+  const risk=bankRiskScore();
+
+  if(state.bankrupt){
+    return{
+      approved:false,
+      message:"I cannot offer new lending while the company is insolvent."
+    };
+  }
+
+  if(state.negativeDays>=3){
+    return{
+      approved:false,
+      message:"You have posted too many consecutive loss-making days. I need to see the business stabilise before we lend again."
+    };
+  }
+
+  if(requested<10000){
+    return{
+      approved:false,
+      message:"The minimum commercial facility we can discuss is Â£10,000."
+    };
+  }
+
+  if(headroom<10000){
+    return{
+      approved:false,
+      message:"You currently have no meaningful borrowing headroom. Improve cash flow, reduce debt or increase park value first."
+    };
+  }
+
+  // Bank may accept the request, counter lower, or reject depending on risk.
+  let offered=Math.min(requested,headroom);
+
+  if(risk<.35){
+    offered=Math.min(offered,Math.floor(headroom*.35/10000)*10000);
+  }else if(risk<.5){
+    offered=Math.min(offered,Math.floor(headroom*.55/10000)*10000);
+  }else if(risk<.68){
+    offered=Math.min(offered,Math.floor(headroom*.78/10000)*10000);
+  }
+
+  offered=Math.floor(offered/10000)*10000;
+
+  if(offered<10000){
+    return{
+      approved:false,
+      message:"The business is too risky for a new facility at the moment."
+    };
+  }
+
+  const currentRate=debtRate();
+  const projectedDebt=state.debt+offered;
+  const projectedLeverage=projectedDebt/Math.max(1,parkValueGross()+offered);
+  const riskPremium=(1-risk)*.045 + Math.max(0,projectedLeverage-.35)*.06;
+  const offerRate=clamp(currentRate+riskPremium,.075,.19);
+
+  const exact=offered===requested;
+
+  return{
+    approved:true,
+    requested,
+    offered,
+    rate:offerRate,
+    exact,
+    message:exact
+      ?`I can approve the full ${money(offered)} request.`
+      :`I cannot support ${money(requested)} at current risk levels, but I can offer ${money(offered)}.`
+  };
+}
+
+function requestLoanNegotiation(){
+  if(state.live.running)return toast("Finish or close the trading day before negotiating finance.");
+
+  const input=document.getElementById("borrowAmountInput");
+  const requested=Number(input.value||0);
+  const result=bankManagerResponse(requested);
+
+  const convo=document.getElementById("bankConversation");
+  convo.innerHTML=`
+    <div class="bank-message user">
+      <strong>You</strong>
+      <p>I would like to borrow ${money(requested)} for the park.</p>
+    </div>
+    <div class="bank-message bank">
+      <strong>Bank Manager</strong>
+      <p>${result.message}</p>
+    </div>`;
+
+  const offerBox=document.getElementById("loanOfferBox");
+  const accept=document.getElementById("acceptLoanBtn");
+  const decline=document.getElementById("declineLoanBtn");
+
+  if(!result.approved){
+    state.pendingLoanOffer=null;
+    offerBox.classList.add("hidden");
+    accept.classList.add("hidden");
+    decline.classList.add("hidden");
+    save();
+    return;
+  }
+
+  state.pendingLoanOffer={
+    requested:result.requested,
+    amount:result.offered,
+    rate:result.rate
+  };
+
+  const annualInterest=result.offered*result.rate;
+  const approxDailyInterest=annualInterest/365;
+  const approxPrincipal=result.offered/(365*5);
+  const approxDailyService=approxDailyInterest+approxPrincipal;
+
+  offerBox.innerHTML=`
+    <div><span>Bank offer</span><strong>${money(result.offered)}</strong></div>
+    <div><span>Indicative APR</span><strong>${(result.rate*100).toFixed(1)}%</strong></div>
+    <div><span>Approx daily debt service</span><strong>${money(approxDailyService)}</strong></div>
+    <div><span>Requested</span><strong>${money(result.requested)}</strong></div>`;
+
+  offerBox.classList.remove("hidden");
+  accept.classList.remove("hidden");
+  decline.classList.remove("hidden");
+  save();
+}
+
+function acceptLoanOffer(){
+  const offer=state.pendingLoanOffer;
+  if(!offer)return toast("There is no active bank offer.");
+
+  // Final headroom check in case the business changed after the offer.
+  const amount=Math.min(offer.amount,Math.floor(borrowingHeadroom()/10000)*10000);
+  if(amount<10000){
+    state.pendingLoanOffer=null;
+    render();
+    return toast("The bank withdrew the offer because your borrowing position changed.");
+  }
+
+  state.cash+=amount;
+  state.debt+=amount;
+
+  addActivity(
+    "Bank facility accepted",
+    `${money(amount)} borrowed following negotiation. Indicative rate ${(offer.rate*100).toFixed(1)}%.`
+  );
+
+  state.pendingLoanOffer=null;
+  save();
+  render();
+  toast(`${money(amount)} funding received.`);
+}
+
+function declineLoanOffer(){
+  if(!state.pendingLoanOffer)return;
+  state.pendingLoanOffer=null;
+  const convo=document.getElementById("bankConversation");
+  convo.innerHTML+=`
+    <div class="bank-message user">
+      <strong>You</strong>
+      <p>I will not take the facility at this time.</p>
+    </div>`;
+  document.getElementById("loanOfferBox").classList.add("hidden");
+  document.getElementById("acceptLoanBtn").classList.add("hidden");
+  document.getElementById("declineLoanBtn").classList.add("hidden");
+  save();
+}
+
 function borrow(a){
-  if(!canBorrow(a))return toast("Lender declined: insufficient borrowing headroom or debt service capacity.");
-  state.cash+=a;state.debt+=a;
-  addActivity("Loan approved",`${money(a)} borrowed at ${(debtRate()*100).toFixed(1)}% variable APR.`);
-  save();render();
+  document.getElementById("borrowAmountInput").value=a;
+  requestLoanNegotiation();
 }
 
 function repay(){
@@ -702,9 +895,101 @@ function render(){
 
   document.getElementById("financeStats").innerHTML=`<div><span>Cash</span><strong>${money(state.cash)}</strong></div><div><span>Park value</span><strong>${money(parkValue())}</strong></div><div><span>Outstanding debt</span><strong>${money(state.debt)}</strong></div><div><span>Variable interest rate</span><strong>${(debtRate()*100).toFixed(1)}%</strong></div><div><span>Daily debt service</span><strong>${money(debtServiceDaily())}</strong></div><div><span>Daily payroll</span><strong>${money(payroll())}</strong></div><div><span>Daily fixed operating costs</span><strong>${money(fixedCosts())}</strong></div><div><span>7-day avg profit</span><strong class="${avgRecentProfit()>=0?"positive":"negative"}">${money(avgRecentProfit())}</strong></div>`;
   document.getElementById("creditPanel").innerHTML=`<strong>${money(borrowingHeadroom())} available</strong><br><small>Lending limit ${money(borrowingLimit())}. Headroom falls as leverage rises or profitability weakens.${state.negativeDays>=3?" New lending currently frozen.":""}</small>`;
-  document.querySelectorAll(".loanBtn").forEach(b=>{const a=Number(b.dataset.loan);b.disabled=!canBorrow(a);b.style.opacity=b.disabled?".45":"1";});
+  
 
-  document.getElementById("historyTable").innerHTML=state.history.map(r=>`<tr><td>Day ${r.day}</td><td>${r.guests.toLocaleString()}</td><td>${money(r.revenue)}</td><td>${money(r.costs)}</td><td>${money(r.debtService)}</td><td class="${r.profit>=0?"positive":"negative"}">${money(r.profit)}</td></tr>`).join("");
+  const pending=state.pendingLoanOffer;
+  const offerBox=document.getElementById("loanOfferBox");
+  const acceptOffer=document.getElementById("acceptLoanBtn");
+  const declineOffer=document.getElementById("declineLoanBtn");
+  if(pending){
+    const approxDaily=pending.amount*pending.rate/365 + pending.amount/(365*5);
+    offerBox.innerHTML=`
+      <div><span>Bank offer</span><strong>${money(pending.amount)}</strong></div>
+      <div><span>Indicative APR</span><strong>${(pending.rate*100).toFixed(1)}%</strong></div>
+      <div><span>Approx daily debt service</span><strong>${money(approxDaily)}</strong></div>
+      <div><span>Requested</span><strong>${money(pending.requested)}</strong></div>`;
+    offerBox.classList.remove("hidden");
+    acceptOffer.classList.remove("hidden");
+    declineOffer.classList.remove("hidden");
+  }else{
+    offerBox.classList.add("hidden");
+    acceptOffer.classList.add("hidden");
+    declineOffer.classList.add("hidden");
+  }
+
+  const historyTable=document.getElementById("historyTable");
+  const emptyReport=document.getElementById("emptyReportState");
+
+  historyTable.innerHTML=state.history.map(r=>`
+    <tr>
+      <td>Day ${r.day}</td>
+      <td>${r.guests.toLocaleString()}</td>
+      <td>${money(r.revenue)}</td>
+      <td>${money(r.costs)}</td>
+      <td>${money(r.debtService||0)}</td>
+      <td class="${r.profit>=0?"positive":"negative"}">${money(r.profit)}</td>
+    </tr>`).join("");
+
+  emptyReport.classList.toggle("hidden",state.history.length>0);
+
+  const reportSummary=document.getElementById("reportSummary");
+  const trendBadge=document.getElementById("reportTrendBadge");
+  const guestTrendBar=document.getElementById("guestTrendBar");
+  const profitTrendBar=document.getElementById("profitTrendBar");
+  const guestTrendValue=document.getElementById("guestTrendValue");
+  const profitTrendValue=document.getElementById("profitTrendValue");
+
+  if(!state.history.length){
+    reportSummary.innerHTML=`
+      <div><span>Days traded</span><strong>0</strong></div>
+      <div><span>Total guests</span><strong>0</strong></div>
+      <div><span>Total profit</span><strong>Â£0</strong></div>
+      <div><span>Best day</span><strong>-</strong></div>`;
+    trendBadge.textContent="NO DATA";
+    trendBadge.className="trend-badge";
+    guestTrendBar.style.width="0%";
+    profitTrendBar.style.width="0%";
+    guestTrendValue.textContent="0";
+    profitTrendValue.textContent="Â£0";
+  }else{
+    const hist=state.history;
+    const totalGuests=hist.reduce((s,x)=>s+x.guests,0);
+    const totalProfit=hist.reduce((s,x)=>s+x.profit,0);
+    const best=hist.reduce((a,b)=>a.profit>b.profit?a:b);
+    const latest=hist[0];
+    const prior=hist[1]||latest;
+
+    const guestChange=prior.guests?((latest.guests-prior.guests)/prior.guests)*100:0;
+    const profitChange=Math.abs(prior.profit)>1?((latest.profit-prior.profit)/Math.abs(prior.profit))*100:0;
+
+    const recent=hist.slice(0,Math.min(7,hist.length));
+    const recentAvg=recent.reduce((s,x)=>s+x.profit,0)/recent.length;
+    const older=hist.slice(recent.length,recent.length*2);
+    const olderAvg=older.length?older.reduce((s,x)=>s+x.profit,0)/older.length:recentAvg;
+    const trendDelta=recentAvg-olderAvg;
+
+    let trend="STABLE",trendClass="trend-badge";
+    if(trendDelta>1000){trend="IMPROVING";trendClass+=" positive";}
+    if(trendDelta<-1000){trend="DECLINING";trendClass+=" negative";}
+
+    reportSummary.innerHTML=`
+      <div><span>Days traded</span><strong>${hist.length}</strong></div>
+      <div><span>Total guests</span><strong>${totalGuests.toLocaleString()}</strong></div>
+      <div><span>Total profit</span><strong class="${totalProfit>=0?"positive":"negative"}">${money(totalProfit)}</strong></div>
+      <div><span>Best day</span><strong>Day ${best.day} - ${money(best.profit)}</strong></div>`;
+
+    trendBadge.textContent=trend;
+    trendBadge.className=trendClass;
+
+    guestTrendValue.textContent=`${guestChange>=0?"+":""}${guestChange.toFixed(1)}%`;
+    profitTrendValue.textContent=`${profitChange>=0?"+":""}${profitChange.toFixed(1)}%`;
+
+    guestTrendBar.style.width=`${clamp(50+guestChange,4,100)}%`;
+    profitTrendBar.style.width=`${clamp(50+profitChange/2,4,100)}%`;
+
+    guestTrendBar.className=`report-bar-fill ${guestChange>=0?"good":"bad"}`;
+    profitTrendBar.className=`report-bar-fill ${profitChange>=0?"good":"bad"}`;
+  }
 }
 
 function showDayModal(){
@@ -735,7 +1020,9 @@ document.getElementById("ticketPrice").oninput=e=>{state.ticketPrice=Number(e.ta
 document.getElementById("parkingPrice").oninput=e=>{state.parkingPrice=Number(e.target.value);save();render();};
 document.getElementById("fastTrackPrice").oninput=e=>{state.fastTrackPrice=Number(e.target.value);save();render();};
 
-document.querySelectorAll(".loanBtn").forEach(b=>b.onclick=()=>borrow(Number(b.dataset.loan)));
+document.getElementById("requestLoanBtn").onclick=requestLoanNegotiation;
+document.getElementById("acceptLoanBtn").onclick=acceptLoanOffer;
+document.getElementById("declineLoanBtn").onclick=declineLoanOffer;
 document.getElementById("repayBtn").onclick=repay;
 
 render();
