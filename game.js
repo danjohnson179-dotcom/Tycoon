@@ -1,4 +1,4 @@
-const SAVE_KEY="parkEmpireV74";
+const SAVE_KEY="parkEmpireV75";
 const money=n=>new Intl.NumberFormat("en-GB",{style:"currency",currency:"GBP",maximumFractionDigits:0}).format(Math.round(n||0));
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 const rand=(a,b)=>Math.random()*(b-a)+a;
@@ -58,7 +58,7 @@ function blankLive(){
 
 function newState(){
   return{
-    version:74,day:1,cash:1500000,debt:0,negativeDays:0,parkOpen:false,
+    version:75,day:1,cash:1500000,debt:0,negativeDays:0,parkOpen:false,
     rating:3.2,reputation:50,satisfaction:72,
     ticketPrice:32,parkingPrice:7,fastTrackPrice:0,
     rides:[{uid:1,id:"carousel",condition:100,daysLeft:0,down:false,ageDays:120}],
@@ -83,7 +83,7 @@ let timer=null;
 function load(){
   try{
     const s=JSON.parse(localStorage.getItem(SAVE_KEY));
-    if(!s||s.version!==74)return null;
+    if(!s||s.version!==75)return null;
     s.live=blankLive();s.parkOpen=false;
     return s;
   }catch{return null;}
@@ -415,6 +415,44 @@ function rideImpact(r){
 }
 
 
+
+function constructionProgress(owned,asset){
+  if(owned.daysLeft<=0)return 100;
+  return clamp(Math.round((asset.buildDays-owned.daysLeft)/Math.max(1,asset.buildDays)*100),0,99);
+}
+function rideExpediteCost(owned){
+  const r=rideById(owned.id);
+  if(owned.daysLeft<=0)return 0;
+  return Math.max(5000,Math.round(r.cost*(.018+.009*owned.daysLeft)));
+}
+function outletExpediteCost(owned){
+  const o=outletById(owned.id);
+  if(owned.daysLeft<=0)return 0;
+  return Math.max(1500,Math.round(o.cost*(.025+.012*owned.daysLeft)));
+}
+function expediteRide(uid){
+  if(state.live.running)return toast("Close the park before changing construction.");
+  const owned=state.rides.find(r=>r.uid===uid);
+  if(!owned||owned.daysLeft<=0)return;
+  const r=rideById(owned.id),cost=rideExpediteCost(owned);
+  if(state.cash<cost)return toast("Not enough cash to expedite construction.");
+  if(!confirm(`Expedite ${r.name} for ${money(cost)}? It will open immediately.`))return;
+  state.cash-=cost;owned.daysLeft=0;
+  addActivity(`${r.name} construction expedited`,`${money(cost)} paid to contractors. The attraction is now operational.`);
+  save();render();toast(`${r.name} is now open.`);
+}
+function expediteOutlet(uid){
+  if(state.live.running)return toast("Close the park before changing construction.");
+  const owned=state.outlets.find(o=>o.uid===uid);
+  if(!owned||owned.daysLeft<=0)return;
+  const o=outletById(owned.id),cost=outletExpediteCost(owned);
+  if(state.cash<cost)return toast("Not enough cash to expedite fit-out.");
+  if(!confirm(`Expedite ${o.name} for ${money(cost)}? It will open immediately.`))return;
+  state.cash-=cost;owned.daysLeft=0;
+  addActivity(`${o.name} fit-out expedited`,`${money(cost)} paid to contractors. The outlet is now operational.`);
+  save();render();toast(`${o.name} is now open.`);
+}
+
 function rideSaleValue(owned){
   const r=rideById(owned.id);
   const age=owned.ageDays||0;
@@ -633,8 +671,8 @@ function render(){
   document.getElementById("ownedAttractions").innerHTML=state.rides.map(o=>{
     const r=rideById(o.id),s=latestRideStat(o.uid);
     const util=o.daysLeft>0?0:Math.min(100,Math.round(s.riders/Math.max(1,r.capacity*9)*100));
-    const badge=o.daysLeft>0?`<span class="asset-badge building">${o.daysLeft} DAYS</span>`:o.down?`<span class="asset-badge down">DOWN</span>`:`<span class="asset-badge">OWNED</span>`;
-    return`<div class="performance-card"><div class="performance-head"><div><h3>${r.name}</h3><small>${r.type}</small></div>${badge}</div><div class="perf-grid"><div><span>Riders today</span><strong>${s.riders.toLocaleString()}</strong></div><div><span>Utilisation</span><strong>${util}%</strong></div><div><span>Appeal</span><strong>+${r.appeal}</strong></div><div><span>Daily upkeep</span><strong>${money(r.upkeep)}</strong></div><div><span>Age</span><strong>${o.ageDays||0} days</strong></div><div><span>Resale value</span><strong>${money(rideSaleValue(o))}</strong></div></div><div class="condition-wrap"><div class="condition-copy"><span>Condition</span><span>${Math.round(o.condition)}%</span></div><div class="condition-track"><div class="condition-fill" style="width:${o.condition}%"></div></div></div>${o.daysLeft<=0&&(o.condition<99||o.down)?`<button class="ghost full" onclick="repairRide(${o.uid})">Repair attraction</button>`:""}<button class="sell-btn full" onclick="sellRide(${o.uid})">Sell attraction - ${money(rideSaleValue(o))}</button></div>`;
+    const badge=o.daysLeft>0?`<span class="asset-badge building">UNDER CONSTRUCTION - ${o.daysLeft} ${o.daysLeft===1?"DAY":"DAYS"} LEFT</span>`:o.down?`<span class="asset-badge down">DOWN</span>`:`<span class="asset-badge">OWNED</span>`;
+    return`<div class="performance-card"><div class="performance-head"><div><h3>${r.name}</h3><small>${r.type}</small></div>${badge}</div><div class="perf-grid"><div><span>Riders today</span><strong>${s.riders.toLocaleString()}</strong></div><div><span>Utilisation</span><strong>${util}%</strong></div><div><span>Appeal</span><strong>+${r.appeal}</strong></div><div><span>Daily upkeep</span><strong>${money(r.upkeep)}</strong></div><div><span>Age</span><strong>${o.ageDays||0} days</strong></div><div><span>Resale value</span><strong>${money(rideSaleValue(o))}</strong></div></div>${o.daysLeft>0?`<div class="construction-box"><div class="construction-copy"><span>Construction progress</span><strong>${constructionProgress(o,r)}%</strong></div><div class="construction-track"><div class="construction-fill" style="width:${constructionProgress(o,r)}%"></div></div><small>${o.daysLeft} ${o.daysLeft===1?"trading day":"trading days"} remaining. This attraction does not generate demand or riders until complete.</small><button class="expedite-btn full" onclick="expediteRide(${o.uid})">Expedite opening - ${money(rideExpediteCost(o))}</button></div>`:""}<div class="condition-wrap"><div class="condition-copy"><span>Condition</span><span>${Math.round(o.condition)}%</span></div><div class="condition-track"><div class="condition-fill" style="width:${o.condition}%"></div></div></div>${o.daysLeft<=0&&(o.condition<99||o.down)?`<button class="ghost full" onclick="repairRide(${o.uid})">Repair attraction</button>`:""}<button class="sell-btn full" onclick="sellRide(${o.uid})">Sell attraction - ${money(rideSaleValue(o))}</button></div>`;
   }).join("");
 
   document.getElementById("attractionShop").innerHTML=rides.map(r=>{
@@ -644,8 +682,8 @@ function render(){
 
   document.getElementById("ownedOutlets").innerHTML=state.outlets.map(o=>{
     const x=outletById(o.id),s=latestOutletStat(o.uid),util=o.daysLeft>0?0:Math.min(100,Math.round(s.customers/Math.max(1,x.capacity)*100));
-    const badge=o.daysLeft>0?`<span class="asset-badge building">${o.daysLeft} DAYS</span>`:`<span class="asset-badge">OWNED</span>`;
-    return`<div class="performance-card"><div class="performance-head"><div><h3>${x.name}</h3><small>${x.type}</small></div>${badge}</div><div class="perf-grid"><div><span>Customers</span><strong>${s.customers.toLocaleString()}</strong></div><div><span>Utilisation</span><strong>${util}%</strong></div><div><span>Sales</span><strong>${money(s.revenue)}</strong></div><div><span>Gross profit</span><strong>${money(s.revenue*x.margin)}</strong></div><div><span>Age</span><strong>${o.ageDays||0} days</strong></div><div><span>Resale value</span><strong>${money(outletSaleValue(o))}</strong></div></div><button class="sell-btn full" onclick="sellOutlet(${o.uid})">Sell asset - ${money(outletSaleValue(o))}</button></div>`;
+    const badge=o.daysLeft>0?`<span class="asset-badge building">FITTING OUT - ${o.daysLeft} ${o.daysLeft===1?"DAY":"DAYS"} LEFT</span>`:`<span class="asset-badge">OWNED</span>`;
+    return`<div class="performance-card"><div class="performance-head"><div><h3>${x.name}</h3><small>${x.type}</small></div>${badge}</div><div class="perf-grid"><div><span>Customers</span><strong>${s.customers.toLocaleString()}</strong></div><div><span>Utilisation</span><strong>${util}%</strong></div><div><span>Sales</span><strong>${money(s.revenue)}</strong></div><div><span>Gross profit</span><strong>${money(s.revenue*x.margin)}</strong></div><div><span>Age</span><strong>${o.ageDays||0} days</strong></div><div><span>Resale value</span><strong>${money(outletSaleValue(o))}</strong></div></div>${o.daysLeft>0?`<div class="construction-box"><div class="construction-copy"><span>Fit-out progress</span><strong>${constructionProgress(o,x)}%</strong></div><div class="construction-track"><div class="construction-fill" style="width:${constructionProgress(o,x)}%"></div></div><small>${o.daysLeft} ${o.daysLeft===1?"trading day":"trading days"} remaining. No sales until fit-out completes.</small><button class="expedite-btn full" onclick="expediteOutlet(${o.uid})">Expedite opening - ${money(outletExpediteCost(o))}</button></div>`:""}<button class="sell-btn full" onclick="sellOutlet(${o.uid})">Sell asset - ${money(outletSaleValue(o))}</button></div>`;
   }).join("");
 
   document.getElementById("outletShop").innerHTML=outlets.map(o=>`<div class="shop-card"><h3>${o.name}</h3><div class="type">${o.type}</div><p>${o.desc}</p><div class="stat-grid"><div><span>Purchase cost</span><strong>${money(o.cost)}</strong></div><div><span>Fit-out</span><strong>${o.buildDays} days</strong></div><div><span>Spend / customer</span><strong>${money(o.spend)}</strong></div><div><span>Gross margin</span><strong>${Math.round(o.margin*100)}%</strong></div></div><div class="impact">Permanent asset. No sales until fit-out completes.</div><button class="primary full" onclick="buyOutlet('${o.id}')">Buy ${o.name}</button></div>`).join("");
@@ -678,7 +716,7 @@ function showDayModal(){
   document.getElementById("dayModal").classList.remove("hidden");
 }
 
-window.buyRide=buyRide;window.buyOutlet=buyOutlet;window.repairRide=repairRide;window.sellRide=sellRide;window.sellOutlet=sellOutlet;window.changeStaff=changeStaff;window.launchCampaign=launchCampaign;
+window.buyRide=buyRide;window.buyOutlet=buyOutlet;window.repairRide=repairRide;window.sellRide=sellRide;window.sellOutlet=sellOutlet;window.expediteRide=expediteRide;window.expediteOutlet=expediteOutlet;window.changeStaff=changeStaff;window.launchCampaign=launchCampaign;
 
 document.querySelectorAll(".tabs button").forEach(btn=>btn.addEventListener("click",()=>{
   document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("active"));
